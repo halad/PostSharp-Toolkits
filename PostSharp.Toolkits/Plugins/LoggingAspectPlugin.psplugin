@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PlugIn xmlns="http://schemas.postsharp.org/1.0/configuration">
+  <TaskType Name="PostSharp.Toolkits"
+            Implementation="PostSharp.Toolkits.Plugins.LoggingAspectPlugIn, PostSharp.Toolkits">
+    <Dependency TaskType="AspectWeaver"/>
+  </TaskType>
+</PlugIn>

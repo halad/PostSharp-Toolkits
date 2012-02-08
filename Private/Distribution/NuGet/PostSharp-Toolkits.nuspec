@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>PostSharp</id>
+    <version>_VERSION_</version>
+    <title>PostSharp Toolkits</title>
+    <authors>SharpCrafters s.r.o.</authors>
+    <description>
+      A comprehensive Aspect-Oriented Programming (AOP) framework for .NET.
+    </description>
+    <summary>
+      PostSharp is an AOP framework for .NET that helps you produce versatile and robust applications with fewer lines of code. Weave new behaviors into existing code without modifying source code, simplify maintenance, and free up time to code business application logic - the code that truly matters to your customers. Free 45-day evaluation period. Then choose between limited free edition and full-featured commercial edition licenses.
+    </summary>
+    <language>en-US</language>
+    <licenseUrl>http://www.sharpcrafters.com/links/nuget-license</licenseUrl>
+    <projectUrl>http://www.sharpcrafters.com/links/nuget-home</projectUrl>
+    <iconUrl>http://www.sharpcrafters.com/nuget/icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>postsharp sharcrafters post-compiler postcompiler aop aspect aosd castle spring dynamic interceptor interception linfu unity dependency di monitoring instrumentation logging tracing</tags>
+  </metadata>
+  <files>
+    <file src="Reference Assemblies\.NET Framework 2.0\PostSharp.dll" target="lib\net20"/>
+    <file src="Reference Assemblies\.NET Framework 2.0\PostSharp.xml" target="lib\net20"/>
+    <file src="Reference Assemblies\Silverlight 3.0\PostSharp.SL.dll" target="lib\sl3"/>
+    <file src="Reference Assemblies\Windows Phone 7.0\PostSharp.WP.dll" target="lib\sl3-wp"/>
+    <file src="Release\**" target="tools\Release"/>
+    <file src="Diag\**" target="tools\Diag"/>
+    <file src="AddIns\**" target="tools\AddIns"/>
+    <file src="License.pdf" target="tools"/>
+    <file src="PostSharp.targets" target="tools"/>
+    <file src="PostSharp.tasks" target="tools"/>
+    <file src="_SRC_\*.ps1" target="tools"/>
+  </files>
+</package>

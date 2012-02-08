@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkits", "PostSharp.Toolkits\PostSharp.Toolkits.csproj", "{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkits.Tests", "PostSharp.Toolkits.Tests\PostSharp.Toolkits.Tests.csproj", "{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkits.Logging", "PostSharp.Toolkits.Logging\PostSharp.Toolkits.Logging.csproj", "{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
