@@ -4,18 +4,17 @@ using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.AspectWeaver.Transformations;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.Collections;
-using PostSharp.Toolkits.Logging;
 
-namespace PostSharp.Toolkits.Weavers
+namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
 {
-    public class LoggingAspectTransformation : MethodBodyTransformation
+    internal class LoggingAspectTransformation : MethodBodyTransformation
     {
-        private readonly Assets assets;
+        private ILoggingBackend backend;
 
-        public LoggingAspectTransformation(AspectWeaver aspectWeaver)
+        public LoggingAspectTransformation(LoggingAspectWeaver aspectWeaver, ILoggingBackend backend)
             : base(aspectWeaver)
         {
-            this.assets = aspectWeaver.Module.Cache.GetItem(() => new Assets(aspectWeaver));
+            this.backend = backend;
         }
 
         public override string GetDisplayName(MethodSemantics semantic)
@@ -28,27 +27,15 @@ namespace PostSharp.Toolkits.Weavers
             return new LoggingAspectTransformationInstance(this, aspectWeaverInstance);
         }
 
-        private sealed class Assets
-        {
-            public readonly GenericMethodReference LogWriteLineMethodImpl;
-            public IMethod instance;
-
-            public Assets(AspectWeaver aspectWeaver)
-            {
-                IMethod logWriteLineMethod = aspectWeaver.Module.FindMethod(
-                    aspectWeaver.Module.FindType(typeof(ILoggingToolkit)), "WriteLine");
-
-                this.LogWriteLineMethodImpl = logWriteLineMethod.GetMethodDefinition().FindOverride(aspectWeaver.AspectType);
-                this.instance = this.LogWriteLineMethodImpl.GetInstance(aspectWeaver.AspectType);
-
-            }
-        }
-
+       
         public class LoggingAspectTransformationInstance : MethodBodyTransformationInstance
         {
-            public LoggingAspectTransformationInstance(MethodBodyTransformation parent, AspectWeaverInstance aspectWeaverInstance)
+            private LoggingAspectTransformation parent;
+            public LoggingAspectTransformationInstance(LoggingAspectTransformation parent, AspectWeaverInstance aspectWeaverInstance)
                 : base(parent, aspectWeaverInstance)
             {
+                this.parent = parent;
+                
             }
 
             public override void Implement(MethodBodyTransformationContext context)
@@ -65,14 +52,12 @@ namespace PostSharp.Toolkits.Weavers
             private sealed class Implementation : MethodBodyWrappingImplementation
             {
                 private readonly LoggingAspectTransformationInstance transformationInstance;
-                private readonly Assets assets;
-                private readonly string codeElementName;
+                 private readonly string codeElementName;
 
                 public Implementation(LoggingAspectTransformationInstance transformationInstance, MethodBodyTransformationContext context)
                     : base(transformationInstance.AspectWeaver.AspectInfrastructureTask, context)
                 {
                     this.transformationInstance = transformationInstance;
-                    this.assets = ((LoggingAspectTransformation)transformationInstance.Transformation).assets;
                     this.codeElementName = string.Format("{0} ({1})", transformationInstance.AspectWeaverInstance.TargetElement,
                                                                       context.MethodSemantic);
                 }
@@ -106,19 +91,7 @@ namespace PostSharp.Toolkits.Weavers
                     InstructionSequence sequence = block.AddInstructionSequence(null, NodePosition.After, null);
 
                     writer.AttachInstructionSequence(sequence);
-                    this.transformationInstance.AspectWeaverInstance.AspectRuntimeInstanceField.EmitLoadField(writer,
-                                                                                                              null);
-
-                    writer.EmitInstructionString(OpCodeNumber.Ldstr, message);
-                    writer.EmitInstructionMethod(
-                        !this.assets.instance.IsVirtual ||
-                        (this.assets.instance.IsSealed || this.assets.instance.DeclaringType.IsSealed)
-                            ? OpCodeNumber.Call
-                            : OpCodeNumber.Callvirt,
-                        this.assets.instance.TranslateMethod(
-                            this.transformationInstance.AspectWeaver.Module));
-
-
+                    this.transformationInstance.parent.backend.EmitWrite(message, writer);
                     writer.DetachInstructionSequence();
                 }
             }

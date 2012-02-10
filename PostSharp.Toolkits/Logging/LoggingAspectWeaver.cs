@@ -5,22 +5,28 @@ using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.AspectWeaver.AspectWeavers;
 using PostSharp.Sdk.CodeModel;
 
-namespace PostSharp.Toolkits.Weavers
+namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
 {
     public sealed class LoggingAspectWeaver : MethodLevelAspectWeaver
     {
         private static readonly AspectConfigurationAttribute defaultConfiguration = new MethodInterceptionAspectConfigurationAttribute();
         private LoggingAspectTransformation transformation;
 
+        private InstrumentationPlugIn instrumentationPlugIn;
+
         public LoggingAspectWeaver()
             : base(defaultConfiguration, MulticastTargets.Property | MulticastTargets.Method | MulticastTargets.Class)
         {
+            this.RequiresRuntimeInstance = false;
+            this.RequiresRuntimeReflectionObject = false;
         }
 
         protected override void Initialize()
         {
             base.Initialize();
-            this.transformation = new LoggingAspectTransformation(this);
+
+            this.instrumentationPlugIn = (InstrumentationPlugIn)this.AspectWeaverTask.Project.Tasks[InstrumentationPlugIn.Name];
+            this.transformation = new LoggingAspectTransformation(this, this.instrumentationPlugIn.Backend);
 
             ApplyWaivedEffects(this.transformation);
         }
@@ -41,22 +47,6 @@ namespace PostSharp.Toolkits.Weavers
             {
                 LoggingAspectTransformation transformation = ((LoggingAspectWeaver)AspectWeaver).transformation;
                 AspectWeaverTransformationInstance transformationInstance = transformation.CreateInstance(this);
-
-                PropertyDeclaration property = TargetElement as PropertyDeclaration;
-                if (property != null)
-                {
-                    MethodDefDeclaration setter = property.Setter;
-                    if (setter != null)
-                    {
-                        adder.Add(setter, transformationInstance);
-                    }
-                    MethodDefDeclaration getter = property.Getter;
-                    if (getter != null)
-                    {
-                        adder.Add(getter, transformationInstance);
-                    }
-                    return;
-                }
 
                 adder.Add(TargetElement, transformationInstance);
             }

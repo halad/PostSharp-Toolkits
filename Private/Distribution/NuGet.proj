@@ -1,31 +1,13 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
   <PropertyGroup>
-    <PostSharpDirectory>..\..</PostSharpDirectory>
-   </PropertyGroup>
-
-
-  <!-- Import targets -->
-  <Import Project="..\Common.targets" />
-  <Import Project="Versioning.targets" />
-
-
-  <PropertyGroup>
-    <NugetSpecFile>$(IntermediateNugetDir)\PostSharp.nuspec</NugetSpecFile>
+    <NugetSpecFile>NuGet\PostSharp-Toolkits.nuspec</NugetSpecFile>
+    <ImageDir>..\..\Build\bin</ImageDir>
+    <IntermediateNugetDir>.</IntermediateNugetDir>
   </PropertyGroup>
 
-
-  <Target Name="CreateSpecFile" DependsOnTargets="GetRevisionNumber">
-
-    
-    <Copy SourceFiles="NuGet\PostSharp.nuspec" DestinationFiles="$(NugetSpecFile)"/>
-    <ReplaceInFiles Files="$(NugetSpecFile)" Pattern="_VERSION_" Replace="$(Version)"/>
-    <ReplaceInFiles Files="$(NugetSpecFile)" Pattern="_SRC_" Replace="$(MSBuildProjectDirectory)\NuGet"/>
-  </Target>
-
-  
-  <Target Name="Build" DependsOnTargets="CreateSpecFile">
+  <Target Name="Build">
     <MakeDir Directories="$(IntermediateNugetDir)"/>
-    <Exec  Command="$(PostSharpDirectory)\Private\Dependencies\NuGet\NuGet.exe pack $(NugetSpecFile) /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(NugetSpecFile) /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
   </Target>
 </Project>

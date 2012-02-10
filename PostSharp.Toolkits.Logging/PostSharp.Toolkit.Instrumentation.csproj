@@ -8,8 +8,8 @@
     <ProjectGuid>{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PostSharp.Toolkits.Logging</RootNamespace>
-    <AssemblyName>PostSharp.Toolkits.Logging</AssemblyName>
+    <RootNamespace>PostSharp.Toolkit.Instrumentation</RootNamespace>
+    <AssemblyName>PostSharp.Toolkit.Instrumentation</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\PostSharp-Toolkits\</SolutionDir>
@@ -40,8 +40,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILoggingToolkit.cs" />
-    <Compile Include="LoggingToolkit.cs" />
+    <Compile Include="ILogAspect.cs" />
+    <Compile Include="LogAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

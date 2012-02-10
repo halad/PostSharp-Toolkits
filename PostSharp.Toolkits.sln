@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkits", "PostSharp.Toolkits\PostSharp.Toolkits.csproj", "{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Instrumentation.Weaver", "PostSharp.Toolkits\PostSharp.Toolkit.Instrumentation.Weaver.csproj", "{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkits.Tests", "PostSharp.Toolkits.Tests\PostSharp.Toolkits.Tests.csproj", "{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Tests", "PostSharp.Toolkits.Tests\PostSharp.Toolkit.Tests.csproj", "{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD4BCA33-49D2-48AB-BC5A-E50A07C90576} = {BD4BCA33-49D2-48AB-BC5A-E50A07C90576}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkits.Logging", "PostSharp.Toolkits.Logging\PostSharp.Toolkits.Logging.csproj", "{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Instrumentation", "PostSharp.Toolkits.Logging\PostSharp.Toolkit.Instrumentation.csproj", "{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

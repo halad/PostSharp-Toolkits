@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+	<!-- Import the definition of what is a source file. -->
+	<Import Project="SourceDef.targets" />
+
+  <PropertyGroup>
+    <PostSharpDirectory Condition="'$(PostSharpDirectory)'==''">..\..</PostSharpDirectory>
+  </PropertyGroup>
+  
+  <Import Project="..\Common.targets" Condition="'$(PostSharpCommonTargetsImported)'==''"/>
+  <Import Project="..\Dependencies\MSBuild.Mercurial\MSBuild.Mercurial.Tasks"/>
+  <Import Project="..\Dependencies\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+	<Target Name="GetRevisionNumber" Condition="'$(Revision)'==''" DependsOnTargets="GetSourceStatus">
+
+    
+    <ReadLinesFromFile File="$(PostSharpDirectory)\#revision">
+      <Output TaskParameter="Lines" PropertyName="Revision" />
+    </ReadLinesFromFile>
+
+    <Error Text="File $(PostsharpDirectory)\#revision is empty." Condition="'$(Revision)'==''"/>
+
+    <PropertyGroup>
+      <Version>$(MajorVersion).$(MinorVersion).$(Revision)</Version>
+    </PropertyGroup>
+
+    <SvnVersion LocalPath="$(PostSharpDirectory)" ToolPath="$(SvnPath)">
+      <Output TaskParameter="HighRevision" PropertyName="_SourceRevision" />
+    </SvnVersion>
+
+    <Message Text="Version: $(Version); Build: $(Revision); Source Revision: $(_SourceRevision)" />
+
+    <PropertyGroup Condition="'$(_SourceStatus)'==''">
+      <ReleaseDir>$(PostSharpDirectory)\Build\releases\v$(Version)-$(_SourceRevision)</ReleaseDir>
+      <ObfuscationMapDir>$(PostSharpDirectory)\Build\obfuscation\v$(Version)-$(_SourceRevision)</ObfuscationMapDir>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(_SourceStatus)'!=''">
+      <ReleaseDir>$(PostSharpDirectory)\Build\releases\v$(Version)-$(_SourceRevision)m</ReleaseDir>
+      <ObfuscationMapDir>$(PostSharpDirectory)\Build\obfuscation\v$(Version)-$(_SourceRevision)m</ObfuscationMapDir>
+    </PropertyGroup>
+
+  </Target>
+
+  <Target Name="GetSourceStatus">
+    <Exec Command="svn status &gt; $(MSBuildProjectDirectory)\$(IntermediateDir)\source-status" WorkingDirectory="$(PostSharpDirectory)" />
+
+    <ReadLinesFromFile File="$(IntermediateDir)\source-status">
+      <Output TaskParameter="Lines" PropertyName="_SourceStatus"/>
+    </ReadLinesFromFile>
+
+    <Message Text="Source status:" Condition="'$(_SourceStatus.Trim())'!=''"/>
+    <Message Text="$(_SourceStatus)" Condition="'$(_SourceStatus.Trim())'!=''"/>
+
+  </Target>
+
+  <Target Name="CreateBuild" DependsOnTargets="CustomTasks;GetSourceStatus">
+
+    <Error Text="Cannot create a build when the current working copy has pending changes." Condition="'$(_SourceStatus.Trim())'!=''"/>
+
+    <MakeDir Directories="$(MSBuildProjectDirectory)\$(IntermediateDir)"/>
+
+    
+    <CreateBuild ProjectId="116" ReleaseName="$(MajorVersion)" MinorVersion="$(MinorVersion)">
+      <Output TaskParameter="BuildNumber"  PropertyName="Revision"/>
+    </CreateBuild>
+
+    <PropertyGroup>
+      <Version>$(MajorVersion).$(MinorVersion).$(Revision)</Version>
+    </PropertyGroup>
+   
+    <WriteLinesToFile
+      Overwrite="true"
+      File="$(PostSharpDirectory)\#revision"
+      Lines="$(Revision)" />
+
+    <CallTarget Targets="CreateVersionFiles" />
+    <CallTarget Targets="CommitCreateBuild" />
+    <CallTarget Targets="UpdateBuildRevision"/>
+    
+  </Target>
+
+  <Target Name="CommitCreateBuild" DependsOnTargets="GetRevisionNumber">
+    
+    <SvnCommit Message="Build $(Version)" Targets="$(PostSharpDirectory)\#revision" />
+
+    <!--
+    <HgCommit LocalPath="$(PostSharpDirectory)" Message="Build $(Version)" />
+    <HgTag LocalPath="$(PostSharpDirectory)" Message="Tagging changeset to build $(Version)" Tag="$(Version)"/>
+    -->
+  </Target>
+
+  
+  
+  <Target Name="UpdateBuildRevision" DependsOnTargets="CustomTasks;GetRevisionNumber">
+    <SvnVersion LocalPath="$(PostSharpDirectory)" ToolPath="$(SvnPath)">
+      <Output TaskParameter="HighRevision" PropertyName="_SourceRevision" />
+    </SvnVersion>
+    <UpdateBuild ProjectId="116" BuildName="$(Version)" Revision="$(_SourceRevision)"/>
+  </Target>
+
+  <Target Name="CreateVersionFiles" DependsOnTargets="GetRevisionNumber">
+
+    <Message Text="Creating version files. Version: $(Version); Revision: $(Revision)." />
+    
+    <PropertyGroup>
+      <AssemblyVersionContent>
+        [assembly: System.Reflection.AssemblyVersion( &quot;$(MajorVersion).0.0&quot; )]
+        #if !SMALL
+        [assembly: System.Reflection.AssemblyFileVersion( &quot;$(Version)&quot; )]
+        #endif
+      </AssemblyVersionContent>
+    </PropertyGroup>
+
+    <ReadLinesFromFile File="$(PostSharpDirectory)\AssemblyVersion.cs">
+      <Output TaskParameter="Lines" PropertyName="_CurrentAssemblyVersionContent"/>
+    </ReadLinesFromFile>
+
+    <WriteLinesToFile
+      Overwrite="true"
+      File="$(PostSharpDirectory)\AssemblyVersion.cs"
+      Lines="$(AssemblyVersionContent)"
+      Condition="'$(_CurrentAssemblyVersionContent)'!='$(AssemblyVersionContent)'"
+      />
+
+    <WriteLinesToFile
+      Overwrite="true"
+      File="$(PostSharpDirectory)\PostSharp-$(MajorVersion).version"
+      Lines="$(MajorVersion).$(MinorVersion).$(Revision)" />
+
+  </Target>
+  
+
+</Project>
