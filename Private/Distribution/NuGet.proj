@@ -1,12 +1,21 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
-  <PropertyGroup>
-    <NugetSpecFile>NuGet\PostSharp-Toolkits.nuspec</NugetSpecFile>
-    <ImageDir>..\..\Build\bin</ImageDir>
-    <IntermediateNugetDir>.</IntermediateNugetDir>
-  </PropertyGroup>
+  <Import Project="..\Dependencies\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>  
 
-  <Target Name="Build">
+  <PropertyGroup>
+    <BuildDirectory>..\..</BuildDirectory>
+    <ImageDir>$(BuildDirectory)\Build\bin</ImageDir>
+    <IntermediateNugetDir>$(ImageDir)\NuGet</IntermediateNugetDir>
+    <NugetSpecFile>$(IntermediateNugetDir)\PostSharp-Toolkits.nuspec</NugetSpecFile>
+  </PropertyGroup>
+  
+  <Target Name="CreateSpecFile">
+    <Copy SourceFiles="NuGet\PostSharp-Toolkits.nuspec" DestinationFiles="$(NugetSpecFile)"/>
+    <FileUpdate Files="$(NugetSpecFile)" Regex="_SRC_" ReplacementText="$(MSBuildProjectDirectory)\NuGet" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="CreateSpecFile">
+    <Message Text="$(NugetContentDir)" />
     <MakeDir Directories="$(IntermediateNugetDir)"/>
     <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(NugetSpecFile) /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
   </Target>

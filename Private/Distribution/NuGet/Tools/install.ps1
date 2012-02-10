@@ -12,6 +12,4 @@ $project = Get-Project -Name ConsoleApplication1
 
 $psprojectfile = [System.IO.Path]::ChangeExtension($project.FileName, ".psproj")
 $psproject = New-Object "System.Xml.XmlDocument"
-
-
 $psproject.Save($psprojectfile);

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>PostSharpToolkits</id>
-    <version>1.0.0.0</version>
+    <version>0.1</version>
     <title>PostSharp Toolkits</title>
     <authors>SharpCrafters s.r.o.</authors>
     <description>
@@ -18,10 +18,11 @@
     <tags>postsharp sharcrafters post-compiler postcompiler aop aspect aosd castle spring dynamic interceptor interception linfu unity dependency di monitoring instrumentation logging tracing</tags>
   </metadata>
   <files>
-    <file src="Release\PostSharp.Toolkits.Logging.dll" target="tools\Toolkits"/>
-    <file src="Release\PostSharp.Toolkits.Logging.pdb" target="tools\Toolkits"/>
-    <file src="Release\PostSharp.Toolkits.dll" target="tools\Release"/>
-    <file src="Release\PostSharp.Toolkits.pdb" target="tools\Release"/>
-    <file src="Release\Plugins\*.psplugin" target="tools\Release\Plugins"/>
+    <file src="Release\PostSharp.Toolkit.Instrumentation.dll" target="lib\net20"/>
+    <file src="Release\PostSharp.Toolkit.Instrumentation.pdb" target="lib\net20"/>
+    <file src="Release\PostSharp.Toolkit.Instrumentation.Weaver.dll" target="tools\Toolkits"/>
+    <file src="Release\PostSharp.Toolkit.Instrumentation.Weaver.pdb" target="tools\Toolkits"/>
+    <file src="_SRC_\Tools\*.ps1" target="tools"/>
+    <file src="_SRC_\Content\*.psproj" target="content"/>
   </files>
 </package>
