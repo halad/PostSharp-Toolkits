@@ -16,6 +16,9 @@
     <iconUrl>http://www.sharpcrafters.com/nuget/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>postsharp sharcrafters post-compiler postcompiler aop aspect aosd castle spring dynamic interceptor interception linfu unity dependency di monitoring instrumentation logging tracing</tags>
+    <dependencies>
+      <dependency id="PostSharp" version="2.1.6.4" />
+    </dependencies>
   </metadata>
   <files>
     <file src="Release\PostSharp.Toolkit.Instrumentation.dll" target="lib"/>
