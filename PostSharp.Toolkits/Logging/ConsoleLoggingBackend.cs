@@ -1,4 +1,5 @@
 using System;
+using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeModel.TypeSignatures;
 
@@ -17,10 +18,25 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
                                                                           IntrinsicType.String));
         }
 
-        public void EmitWrite(string message, InstructionWriter instructionWriter)
+        public ILoggingBackendInstance CreateInstance(AspectWeaverInstance aspectWeaverInstance)
         {
-            instructionWriter.EmitInstructionString(OpCodeNumber.Ldstr, message);
-            instructionWriter.EmitInstructionMethod(OpCodeNumber.Call, this.writeLineMethod);
+            return new ConsoleLoggingBackendInstance(this);
+        }
+
+        private sealed class ConsoleLoggingBackendInstance : ILoggingBackendInstance
+        {
+            private readonly ConsoleLoggingBackend parent;
+
+            public ConsoleLoggingBackendInstance(ConsoleLoggingBackend parent)
+            {
+                this.parent = parent;
+            }
+
+            public void EmitWrite(string message, InstructionWriter instructionWriter)
+            {
+                instructionWriter.EmitInstructionString(OpCodeNumber.Ldstr, message);
+                instructionWriter.EmitInstructionMethod(OpCodeNumber.Call, this.parent.writeLineMethod);
+            }
         }
     }
 }

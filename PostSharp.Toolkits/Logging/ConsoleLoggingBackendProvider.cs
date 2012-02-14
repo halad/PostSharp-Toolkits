@@ -6,7 +6,7 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
     {
         public ILoggingBackend GetBackend(string name)
         {
-            if (name.Equals("Console", StringComparison.OrdinalIgnoreCase))
+            if (name.Equals("console", StringComparison.OrdinalIgnoreCase))
                 return new ConsoleLoggingBackend();
 
             return null;

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PostSharp.Sdk.Extensibility;
 using PostSharp.Sdk.Extensibility.Configuration;
 using PostSharp.Toolkit.Instrumentation.Weaver;
 using PostSharp.Toolkit.Instrumentation.Weaver.Logging;
+
+
 [assembly: AssemblyProjectProvider(typeof(InstrumentationProjectConfiguration))]
 namespace PostSharp.Toolkit.Instrumentation.Weaver
 {

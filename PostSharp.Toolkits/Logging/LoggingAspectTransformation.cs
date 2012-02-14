@@ -9,7 +9,7 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
 {
     internal class LoggingAspectTransformation : MethodBodyTransformation
     {
-        private ILoggingBackend backend;
+        private readonly ILoggingBackend backend;
 
         public LoggingAspectTransformation(LoggingAspectWeaver aspectWeaver, ILoggingBackend backend)
             : base(aspectWeaver)
@@ -27,15 +27,13 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
             return new LoggingAspectTransformationInstance(this, aspectWeaverInstance);
         }
 
-       
         public class LoggingAspectTransformationInstance : MethodBodyTransformationInstance
         {
-            private LoggingAspectTransformation parent;
+            private readonly LoggingAspectTransformation parent;
             public LoggingAspectTransformationInstance(LoggingAspectTransformation parent, AspectWeaverInstance aspectWeaverInstance)
                 : base(parent, aspectWeaverInstance)
             {
                 this.parent = parent;
-                
             }
 
             public override void Implement(MethodBodyTransformationContext context)
@@ -52,7 +50,8 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
             private sealed class Implementation : MethodBodyWrappingImplementation
             {
                 private readonly LoggingAspectTransformationInstance transformationInstance;
-                 private readonly string codeElementName;
+                private readonly string codeElementName;
+                private ILoggingBackendInstance backendInstance;
 
                 public Implementation(LoggingAspectTransformationInstance transformationInstance, MethodBodyTransformationContext context)
                     : base(transformationInstance.AspectWeaver.AspectInfrastructureTask, context)
@@ -60,6 +59,8 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
                     this.transformationInstance = transformationInstance;
                     this.codeElementName = string.Format("{0} ({1})", transformationInstance.AspectWeaverInstance.TargetElement,
                                                                       context.MethodSemantic);
+
+                    this.backendInstance = this.transformationInstance.parent.backend.CreateInstance(transformationInstance.AspectWeaverInstance);
                 }
 
                 public void Implement()
@@ -70,6 +71,7 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
 
                 protected override void ImplementOnException(InstructionBlock block, ITypeSignature exceptionType, InstructionWriter writer)
                 {
+
                 }
 
                 protected override void ImplementOnExit(InstructionBlock block, InstructionWriter writer)
@@ -91,7 +93,7 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
                     InstructionSequence sequence = block.AddInstructionSequence(null, NodePosition.After, null);
 
                     writer.AttachInstructionSequence(sequence);
-                    this.transformationInstance.parent.backend.EmitWrite(message, writer);
+                    this.backendInstance.EmitWrite(message, writer);
                     writer.DetachInstructionSequence();
                 }
             }

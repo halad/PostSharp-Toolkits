@@ -3,7 +3,6 @@ using PostSharp.Aspects.Configuration;
 using PostSharp.Extensibility;
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.AspectWeaver.AspectWeavers;
-using PostSharp.Sdk.CodeModel;
 
 namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
 {
