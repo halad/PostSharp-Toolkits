@@ -12,7 +12,8 @@ $psproj = $project.ProjectItems | where { $_.Name -eq $psprojectName }
 # If this item already exists, load it
 if ($psproj)
 {
-	$xml.Load($psproj.FileName);
+  $psprojectFile = $psproj.Properties.Item("FullPath").Value;
+	$xml = [xml](Get-Content $psprojectFile)
 } 
 else 
 {
@@ -31,8 +32,8 @@ if (!$defaultUsing)
 	$xml.Project.AppendChild($defaultUsing);
 }
 
-$toolkitWeaver = $xml.Project.Using | where { $_.File -like 'PostSharp.Toolkit.Instrumentation.Weaver.dll'}
-$weaverFile = $path::Combine($toolsPath, "PostSharp.Toolkit.Instrumentation.Weaver.dll");
+$toolkitWeaver = $xml.Project.Using | where { $_.File -like 'PostSharp.Toolkit.Diagnostics.Weaver.dll'}
+$weaverFile = $path::Combine($toolsPath, "PostSharp.Toolkit.Diagnostics.Weaver.dll");
 
 # Make the path to the targets file relative.
 $projectUri = new-object Uri('file://' + $psprojectFile)
