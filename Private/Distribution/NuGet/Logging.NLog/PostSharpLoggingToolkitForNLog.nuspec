@@ -20,13 +20,13 @@
       <dependency id="PostSharp" version="2.1.6.4" />
       <dependency id="PostSharpLoggingToolkit" version="0.1" />
       <dependency id="NLog" version="2.0.0.2000" />
-      <dependency id="NLog.Config" version="2.0.0.2000" />
+      <!--<dependency id="NLog.Config" version="2.0.0.2000" />-->
     </dependencies>
   </metadata>
   <files>
     <file src="Release\PostSharp.Toolkit.Diagnostics.Weaver.NLog.dll" target="tools"/>
     <file src="Release\PostSharp.Toolkit.Diagnostics.Weaver.NLog.pdb" target="tools"/>
     <file src="_SRC_\Tools\*.ps1" target="tools"/>
-    <file src="_SRC_\Content\dummy.txt" target="content"/>
+    <file src="_SRC_\Content\PostSharpDummyFile.txt" target="content"/>
   </files>
 </package>
