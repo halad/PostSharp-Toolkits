@@ -51,7 +51,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             {
                 private readonly LoggingAspectTransformationInstance transformationInstance;
                 private readonly string codeElementName;
-                private ILoggingBackendInstance backendInstance;
+                private readonly ILoggingBackendInstance backendInstance;
 
                 public Implementation(LoggingAspectTransformationInstance transformationInstance, MethodBodyTransformationContext context)
                     : base(transformationInstance.AspectWeaver.AspectInfrastructureTask, context)

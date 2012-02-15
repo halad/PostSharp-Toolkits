@@ -3,9 +3,9 @@
 <Project xmlns="http://schemas.postsharp.org/1.0/configuration" ReferenceDirectory="{$ReferenceDirectory}">
 
   <Property Name="LoggingBackend" Value="nlog" />
+  
   <Using File="default"/>
-  <Using File="..\Build\bin\{$Configuration}\PostSharp.Toolkit.Instrumentation.Weaver.dll"/>
-  <Using File="..\Build\bin\{$Configuration}\PostSharp.Toolkit.Instrumentation.Weaver.NLog.dll"/>
- 
+  <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Instrumentation.Weaver.dll"/>
+  <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Instrumentation.Weaver.NLog.dll"/>
 
 </Project>

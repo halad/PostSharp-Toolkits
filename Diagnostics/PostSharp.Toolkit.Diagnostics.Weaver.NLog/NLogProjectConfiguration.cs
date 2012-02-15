@@ -5,6 +5,7 @@ using PostSharp.Toolkit.Diagnostics.Weaver.NLog;
 using PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging;
 
 [assembly: AssemblyProjectProvider(typeof(NLogProjectConfiguration))]
+
 namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog
 {
     public class NLogProjectConfiguration : IProjectConfigurationProvider

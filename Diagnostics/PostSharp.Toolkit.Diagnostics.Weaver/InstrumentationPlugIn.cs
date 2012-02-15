@@ -7,7 +7,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
 {
     internal class InstrumentationPlugIn : AspectWeaverPlugIn
     {
-        public const string Name = "PostSharp.Toolkit.Instrumentation";
+        public const string Name = "PostSharp.Toolkit.Diagnostics";
 
         private ILoggingBackend backend;
 
