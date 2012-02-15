@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1A587F50-8933-4F6B-9EE9-E68504210FA0}</ProjectGuid>
+    <ProjectGuid>{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PostSharp.Toolkit.Instrumentation.Weaver.NLog</RootNamespace>
-    <AssemblyName>PostSharp.Toolkit.Instrumentation.Weaver.NLog</AssemblyName>
+    <RootNamespace>PostSharp.Toolkit.Diagnostics</RootNamespace>
+    <AssemblyName>PostSharp.Toolkit.Diagnostics</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\PostSharp-Toolkits\</SolutionDir>
@@ -33,37 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="PostSharp">
-      <HintPath>..\Build\bin\Debug\PostSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="PostSharp.Sdk">
-      <HintPath>..\..\PostSharp-2.1\Build\bin\Debug\PostSharp.Sdk.dll</HintPath>
+      <HintPath>..\..\PostSharp-2.1\Build\bin\Debug\PostSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NLogProjectConfiguration.cs" />
-    <Compile Include="Logging\NLogBackend.cs" />
-    <Compile Include="Logging\NLogBackendProvider.cs" />
+    <Compile Include="ILogAspect.cs" />
+    <Compile Include="LogAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PostSharp.Toolkits\PostSharp.Toolkit.Instrumentation.Weaver.csproj">
-      <Project>{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}</Project>
-      <Name>PostSharp.Toolkit.Instrumentation.Weaver</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -1,7 +1,7 @@
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     public interface ILoggingBackend
     {

@@ -3,7 +3,7 @@ using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeModel.TypeSignatures;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console
 {
     internal sealed class ConsoleLoggingBackend : ILoggingBackend
     {
@@ -11,7 +11,7 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
 
         public void Initialize(ModuleDeclaration module)
         {
-            writeLineMethod = module.FindMethod(module.FindType(typeof(Console)), "WriteLine",
+            this.writeLineMethod = module.FindMethod(module.FindType(typeof(System.Console)), "WriteLine",
                                                 method =>
                                                 method.Parameters.Count == 1 &&
                                                 IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType,

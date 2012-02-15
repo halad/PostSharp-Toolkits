@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using NUnit.Framework;
-using PostSharp.Toolkit.Instrumentation;
+using PostSharp.Toolkit.Diagnostics;
 using PostSharp.Toolkit.Tests.Data;
 
 [assembly: Log(AttributeTargetTypes = "PostSharp.Toolkit.Tests.Data.SimpleClass")]

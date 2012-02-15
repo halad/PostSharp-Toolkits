@@ -4,7 +4,7 @@ using PostSharp.Extensibility;
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.AspectWeaver.AspectWeavers;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     public sealed class LoggingAspectWeaver : MethodLevelAspectWeaver
     {

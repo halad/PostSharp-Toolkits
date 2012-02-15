@@ -1,9 +1,9 @@
 ﻿using System;
 using PostSharp.Extensibility;
 using PostSharp.Sdk.AspectWeaver;
-using PostSharp.Toolkit.Instrumentation.Weaver.Logging;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver
+namespace PostSharp.Toolkit.Diagnostics.Weaver
 {
     internal class InstrumentationPlugIn : AspectWeaverPlugIn
     {

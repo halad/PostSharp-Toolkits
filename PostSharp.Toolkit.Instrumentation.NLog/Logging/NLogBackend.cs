@@ -3,9 +3,9 @@ using NLog;
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeModel.TypeSignatures;
-using PostSharp.Toolkit.Instrumentation.Weaver.Logging;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver.NLog.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 {
     internal sealed class NLogBackend : ILoggingBackend
     {
@@ -41,7 +41,7 @@ namespace PostSharp.Toolkit.Instrumentation.Weaver.NLog.Logging
             FieldDefDeclaration loggerField;
             if (!this.logFields.TryGetValue(category, out loggerField))
             {
-                loggerField = this.containingTypeBuilder.CreateLoggerField(category, this.loggerType, () => getMethodMethod);
+                loggerField = this.containingTypeBuilder.CreateLoggerField(category, this.loggerType, () => this.getMethodMethod);
                 this.logFields[category] = loggerField;
             }
 

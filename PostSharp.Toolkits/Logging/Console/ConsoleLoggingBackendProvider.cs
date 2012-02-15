@@ -1,6 +1,6 @@
 using System;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console
 {
     internal sealed class ConsoleLoggingBackendProvider : ILoggingBackendProvider
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using PostSharp.Toolkit.Instrumentation.Weaver.Logging;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver.NLog.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 {
     public sealed class NLogBackendProvider : ILoggingBackendProvider
     {

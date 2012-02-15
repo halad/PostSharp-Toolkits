@@ -1,9 +1,9 @@
 using PostSharp.Aspects;
 using PostSharp.Extensibility;
 
-namespace PostSharp.Toolkit.Instrumentation
+namespace PostSharp.Toolkit.Diagnostics
 {
-    [RequirePostSharp("PostSharp.Toolkit.Instrumentation.Weaver", "PostSharp.Toolkit.Instrumentation")]
+    [RequirePostSharp("PostSharp.Toolkit.Diagnostics.Weaver", "PostSharp.Toolkit.Diagnostics")]
     public interface ILogAspect : IAspect
     {
     }

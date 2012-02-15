@@ -2,7 +2,7 @@ using System;
 using PostSharp.Aspects;
 using PostSharp.Extensibility;
 
-namespace PostSharp.Toolkit.Instrumentation
+namespace PostSharp.Toolkit.Diagnostics
 {
     [Serializable]
     [MulticastAttributeUsage(MulticastTargets.Method)]

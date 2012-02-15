@@ -5,7 +5,7 @@ using PostSharp.Sdk.AspectWeaver.Transformations;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.Collections;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     internal class LoggingAspectTransformation : MethodBodyTransformation
     {

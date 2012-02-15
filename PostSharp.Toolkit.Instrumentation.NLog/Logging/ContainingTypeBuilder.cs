@@ -5,7 +5,7 @@ using PostSharp.Sdk.CodeWeaver;
 using PostSharp.Sdk.Collections;
 using PostSharp.Sdk.Utilities;
 
-namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 {
     public sealed class ContainingTypeBuilder
     {

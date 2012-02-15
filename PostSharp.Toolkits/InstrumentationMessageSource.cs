@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PostSharp.Extensibility;
 using PostSharp.Sdk.Extensibility;
 
-namespace PostSharp.Toolkit.Instrumentation.Weaver
+namespace PostSharp.Toolkit.Diagnostics.Weaver
 {
     internal static class InstrumentationMessageSource
     {

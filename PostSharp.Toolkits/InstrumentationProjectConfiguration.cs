@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using PostSharp.Sdk.Extensibility;
 using PostSharp.Sdk.Extensibility.Configuration;
-using PostSharp.Toolkit.Instrumentation.Weaver;
-using PostSharp.Toolkit.Instrumentation.Weaver.Logging;
-
+using PostSharp.Toolkit.Diagnostics.Weaver;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console;
 
 [assembly: AssemblyProjectProvider(typeof(InstrumentationProjectConfiguration))]
-namespace PostSharp.Toolkit.Instrumentation.Weaver
+namespace PostSharp.Toolkit.Diagnostics.Weaver
 {
     public class InstrumentationProjectConfiguration : IProjectConfigurationProvider
     {

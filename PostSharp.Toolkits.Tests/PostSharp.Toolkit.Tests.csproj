@@ -72,16 +72,25 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="PostSharp.Toolkit.Tests.Release.psproj">
+      <DependentUpon>PostSharp.Toolkit.Tests.psproj</DependentUpon>
+      <IsTransformFile>True</IsTransformFile>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PostSharp.Toolkits.Logging\PostSharp.Toolkit.Instrumentation.csproj">
+    <ProjectReference Include="..\PostSharp.Toolkits.Logging\PostSharp.Toolkit.Diagnostics.csproj">
       <Project>{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}</Project>
-      <Name>PostSharp.Toolkit.Instrumentation</Name>
+      <Name>PostSharp.Toolkit.Diagnostics</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="PostSharp.Toolkit.Tests.Debug.psproj">
+      <DependentUpon>PostSharp.Toolkit.Tests.psproj</DependentUpon>
+      <IsTransformFile>True</IsTransformFile>
+    </None>
     <None Include="PostSharp.Toolkit.Tests.psproj">
       <SubType>Designer</SubType>
+      <TransformOnBuild>true</TransformOnBuild>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -89,6 +98,10 @@
   <Import Project="..\..\PostSharp-2.1\Build\bin\PostSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>
+  <PropertyGroup>
+    <SlowCheetahTargets Condition=" '$(SlowCheetahTargets)'=='' ">$(LOCALAPPDATA)\Microsoft\MSBuild\SlowCheetah\v1\SlowCheetah.Transforms.targets</SlowCheetahTargets>
+  </PropertyGroup>
+  <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
