@@ -5,7 +5,7 @@
   <Property Name="LoggingBackend" Value="nlog" />
   
   <Using File="default"/>
-  <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Instrumentation.Weaver.dll"/>
-  <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Instrumentation.Weaver.NLog.dll"/>
+  <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Diagnostics.Weaver.dll"/>
+  <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Diagnostics.Weaver.NLog.dll"/>
 
 </Project>

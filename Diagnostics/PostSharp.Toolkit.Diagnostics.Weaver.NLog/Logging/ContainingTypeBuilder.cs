@@ -35,11 +35,11 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
                 Attributes = TypeAttributes.NotPublic | TypeAttributes.Sealed | TypeAttributes.Abstract,
                 BaseType = ((IType)this.module.Cache.GetType("System.Object, mscorlib"))
             };
-            this.module.Types.Add(this.containingType);
+            this.module.Types.Add(logCategoriesType);
 
             // Add [CompilerGenerated] and [DebuggerNonUserCode] to the type
-            this.weavingHelper.AddCompilerGeneratedAttribute(this.containingType.CustomAttributes);
-            this.weavingHelper.AddDebuggerNonUserCodeAttribute(this.containingType.CustomAttributes);
+            this.weavingHelper.AddCompilerGeneratedAttribute(logCategoriesType.CustomAttributes);
+            this.weavingHelper.AddDebuggerNonUserCodeAttribute(logCategoriesType.CustomAttributes);
 
             MethodDefDeclaration staticConstructor = new MethodDefDeclaration
             {
@@ -47,7 +47,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
                 Attributes = MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.RTSpecialName |
                              MethodAttributes.SpecialName | MethodAttributes.HideBySig,
             };
-            this.containingType.Methods.Add(staticConstructor);
+            logCategoriesType.Methods.Add(staticConstructor);
 
             staticConstructor.ReturnParameter = new ParameterDeclaration
             {

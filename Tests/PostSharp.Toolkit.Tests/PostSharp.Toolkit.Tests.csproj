@@ -12,8 +12,8 @@
     <AssemblyName>PostSharp.Toolkit.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\PostSharp-Toolkits\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\PostSharp-Toolkits\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,19 +42,12 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="pnunit.framework">
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="PostSharp">
-      <HintPath>..\..\PostSharp-2.1\Build\bin\Debug\PostSharp.dll</HintPath>
+    <Reference Include="PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\PostSharp-2.1\Build\bin\Debug\PostSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleTestsFixture.cs" />
@@ -74,16 +67,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Diagnostics\PostSharp.Toolkit.Diagnostics\PostSharp.Toolkit.Diagnostics.csproj">
-      <Project>{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}</Project>
-      <Name>PostSharp.Toolkit.Diagnostics</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="PostSharp.Toolkit.Tests.psproj">
       <SubType>Designer</SubType>
       <TransformOnBuild>true</TransformOnBuild>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Diagnostics\PostSharp.Toolkit.Diagnostics\PostSharp.Toolkit.Diagnostics.csproj">
+      <Project>{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}</Project>
+      <Name>PostSharp.Toolkit.Diagnostics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
