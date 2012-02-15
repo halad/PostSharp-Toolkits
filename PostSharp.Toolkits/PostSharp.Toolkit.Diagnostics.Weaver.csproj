@@ -46,7 +46,6 @@
     <Compile Include="InstrumentationProjectConfiguration.cs" />
     <Compile Include="Logging\Console\ConsoleLoggingBackend.cs" />
     <Compile Include="Logging\Console\ConsoleLoggingBackendProvider.cs" />
-    <Compile Include="Logging\ContainingTypeBuilder.cs" />
     <Compile Include="Logging\ILoggingBackend.cs" />
     <Compile Include="Logging\ILoggingBackendProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
