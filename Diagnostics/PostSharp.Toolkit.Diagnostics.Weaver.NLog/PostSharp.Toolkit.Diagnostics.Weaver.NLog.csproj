@@ -53,7 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PostSharp.Toolkits\PostSharp.Toolkit.Diagnostics.Weaver.csproj">
+    <ProjectReference Include="..\PostSharp.Toolkit.Diagnostics.Weaver\PostSharp.Toolkit.Diagnostics.Weaver.csproj">
       <Project>{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}</Project>
       <Name>PostSharp.Toolkit.Diagnostics.Weaver</Name>
     </ProjectReference>

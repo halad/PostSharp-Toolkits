@@ -32,3 +32,5 @@ Demo/**
 *.typemock
 lint.db
 packages/*
+*.ncrunchsolution
+*.ncrunchsolution.user

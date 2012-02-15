@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnostics.Weaver", "PostSharp.Toolkits\PostSharp.Toolkit.Diagnostics.Weaver.csproj", "{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnostics.Weaver", "Diagnostics\PostSharp.Toolkit.Diagnostics.Weaver\PostSharp.Toolkit.Diagnostics.Weaver.csproj", "{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Tests", "PostSharp.Toolkits.Tests\PostSharp.Toolkit.Tests.csproj", "{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Tests", "Tests\PostSharp.Toolkit.Tests\PostSharp.Toolkit.Tests.csproj", "{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BD4BCA33-49D2-48AB-BC5A-E50A07C90576} = {BD4BCA33-49D2-48AB-BC5A-E50A07C90576}
 		{1A587F50-8933-4F6B-9EE9-E68504210FA0} = {1A587F50-8933-4F6B-9EE9-E68504210FA0}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnostics", "PostSharp.Toolkits.Logging\PostSharp.Toolkit.Diagnostics.csproj", "{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnostics", "Diagnostics\PostSharp.Toolkit.Diagnostics\PostSharp.Toolkit.Diagnostics.csproj", "{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnostics.Weaver.NLog", "PostSharp.Toolkit.Instrumentation.NLog\PostSharp.Toolkit.Diagnostics.Weaver.NLog.csproj", "{1A587F50-8933-4F6B-9EE9-E68504210FA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnostics.Weaver.NLog", "Diagnostics\PostSharp.Toolkit.Diagnostics.Weaver.NLog\PostSharp.Toolkit.Diagnostics.Weaver.NLog.csproj", "{1A587F50-8933-4F6B-9EE9-E68504210FA0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E79F9017-525A-458D-868D-37990CD4668B}"
 EndProject

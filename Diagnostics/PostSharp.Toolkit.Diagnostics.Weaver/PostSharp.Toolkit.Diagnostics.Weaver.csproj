@@ -53,7 +53,7 @@
     <Compile Include="Logging\LoggingAspectWeaver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PostSharp.Toolkits.Logging\PostSharp.Toolkit.Diagnostics.csproj">
+    <ProjectReference Include="..\PostSharp.Toolkit.Diagnostics\PostSharp.Toolkit.Diagnostics.csproj">
       <Project>{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}</Project>
       <Name>PostSharp.Toolkit.Diagnostics</Name>
     </ProjectReference>
