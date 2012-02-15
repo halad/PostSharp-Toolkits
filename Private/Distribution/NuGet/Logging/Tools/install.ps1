@@ -32,7 +32,6 @@ if (!$defaultUsing)
 	$xml.Project.AppendChild($defaultUsing);
 }
 
-$toolkitWeaver = $xml.Project.Using | where { $_.File -like 'PostSharp.Toolkit.Diagnostics.Weaver.dll'}
 $weaverFile = $path::Combine($toolsPath, "PostSharp.Toolkit.Diagnostics.Weaver.dll");
 
 # Make the path to the targets file relative.
@@ -40,6 +39,7 @@ $projectUri = new-object Uri('file://' + $psprojectFile)
 $targetUri = new-object Uri('file://' + $weaverFile)
 $relativePath = $projectUri.MakeRelativeUri($targetUri).ToString().Replace([System.IO.Path]::AltDirectorySeparatorChar, [System.IO.Path]::DirectorySeparatorChar)
 
+$toolkitWeaver = $xml.Project.Using | where { $_.File -like '*PostSharp.Toolkit.Diagnostics.Weaver.dll*'}
 if ($toolkitWeaver)
 {
 	$toolkitWeaver.SetAttribute("File", $relativePath)
