@@ -5,18 +5,25 @@
   <PropertyGroup>
     <BuildDirectory>..\..</BuildDirectory>
     <ImageDir>$(BuildDirectory)\Build\bin</ImageDir>
-    <IntermediateNugetDir>$(ImageDir)\NuGet</IntermediateNugetDir>
-    <NugetSpecFile>$(IntermediateNugetDir)\PostSharp-Toolkits.nuspec</NugetSpecFile>
+    <IntermediateNuGetDir>$(ImageDir)\NuGet</IntermediateNuGetDir>
+    
+    <PostSharpLoggingSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging</PostSharpLoggingSpecDir>
+    <PostSharpLoggingNLogSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging.NLog</PostSharpLoggingNLogSpecDir>
   </PropertyGroup>
   
-  <Target Name="CreateSpecFile">
-    <Copy SourceFiles="NuGet\PostSharp-Toolkits.nuspec" DestinationFiles="$(NugetSpecFile)"/>
-    <FileUpdate Files="$(NugetSpecFile)" Regex="_SRC_" ReplacementText="$(MSBuildProjectDirectory)\NuGet" />
+  <ItemGroup>
+    <NuGetSourceFiles Include="NuGet\**\*.nuspec" />
+  </ItemGroup>
+  
+  <Target Name="CreateSpecFiles">
+    <MakeDir Directories="$(IntermediateNugetDir)"/>
+    <Copy SourceFiles="@(NuGetSourceFiles)" DestinationFolder="$(IntermediateNuGetDir)"/>
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpLoggingToolkit.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpLoggingSpecDir)" />
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpLoggingToolkitForNLog.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpLoggingNLogSpecDir)" />
   </Target>
 
-  <Target Name="Build" DependsOnTargets="CreateSpecFile">
-    <Message Text="$(NugetContentDir)" />
-    <MakeDir Directories="$(IntermediateNugetDir)"/>
-    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(NugetSpecFile) /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+  <Target Name="Build" DependsOnTargets="CreateSpecFiles">
+    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpLoggingToolkit.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpLoggingToolkitForNLog.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
   </Target>
 </Project>

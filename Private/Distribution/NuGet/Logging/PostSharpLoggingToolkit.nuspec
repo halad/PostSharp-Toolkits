@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>PostSharpLoggingToolkit</id>
+    <version>0.1</version>
+    <title>PostSharp Logging Toolkit for NLog</title>
+    <authors>SharpCrafters s.r.o.</authors>
+    <description>
+      Toolkits framework for PostSharp.
+    </description>
+    <summary>
+    </summary>
+    <language>en-US</language>
+    <licenseUrl>http://www.sharpcrafters.com/links/nuget-license</licenseUrl>
+    <projectUrl>http://www.sharpcrafters.com/links/nuget-home</projectUrl>
+    <iconUrl>http://www.sharpcrafters.com/nuget/icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>postsharp sharcrafters post-compiler postcompiler aop aspect aosd castle spring dynamic interceptor interception linfu unity dependency di monitoring instrumentation logging tracing</tags>
+    <dependencies>
+      <dependency id="PostSharp" version="2.1.6.4" />      
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Release\PostSharp.Toolkit.Diagnostics.dll" target="lib"/>
+    <file src="Release\PostSharp.Toolkit.Diagnostics.pdb" target="lib"/>
+    <file src="Release\PostSharp.Toolkit.Diagnostics.Weaver.dll" target="tools"/>
+    <file src="Release\PostSharp.Toolkit.Diagnostics.Weaver.pdb" target="tools"/>
+    <file src="_SRC_\Tools\*.ps1" target="tools"/>
+  </files>
+</package>

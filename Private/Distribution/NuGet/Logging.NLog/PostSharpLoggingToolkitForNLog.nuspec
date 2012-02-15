@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>PostSharpToolkits</id>
+    <id>PostSharpLoggingToolkitForNLog</id>
     <version>0.1</version>
-    <title>PostSharp Toolkits</title>
+    <title>PostSharp Logging Toolkit for NLog</title>
     <authors>SharpCrafters s.r.o.</authors>
     <description>
-      Toolkits framework for PostSharp.
+      Adds logging backed by NLog, powered by PostSharp.
     </description>
     <summary>
     </summary>
@@ -18,14 +18,15 @@
     <tags>postsharp sharcrafters post-compiler postcompiler aop aspect aosd castle spring dynamic interceptor interception linfu unity dependency di monitoring instrumentation logging tracing</tags>
     <dependencies>
       <dependency id="PostSharp" version="2.1.6.4" />
+      <dependency id="PostSharpLoggingToolkit" version="0.1" />
+      <dependency id="NLog" version="2.0.0.2000" />
+      <dependency id="NLog.Config" version="2.0.0.2000" />
     </dependencies>
   </metadata>
   <files>
-    <file src="Release\PostSharp.Toolkit.Instrumentation.dll" target="lib"/>
-    <file src="Release\PostSharp.Toolkit.Instrumentation.pdb" target="lib"/>
-    <file src="Release\PostSharp.Toolkit.Instrumentation.Weaver.dll" target="tools"/>
-    <file src="Release\PostSharp.Toolkit.Instrumentation.Weaver.pdb" target="tools"/>
+    <file src="Release\PostSharp.Toolkit.Diagnostics.Weaver.NLog.dll" target="tools"/>
+    <file src="Release\PostSharp.Toolkit.Diagnostics.Weaver.NLog.pdb" target="tools"/>
     <file src="_SRC_\Tools\*.ps1" target="tools"/>
-    <file src="_SRC_\Content\Template.psproj" target="content"/>
+    <file src="_SRC_\Content\dummy.txt" target="content"/>
   </files>
 </package>
