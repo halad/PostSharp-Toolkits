@@ -12,7 +12,7 @@ $psproj = $project.ProjectItems | where { $_.Name -eq $psprojectName }
 # If this item already exists, load it
 if ($psproj)
 {
-  $psprojectFile = $psproj.Properties.Item("FullPath").Value;
+  $psprojectFile = $psproj.Properties.Item("FullPath").Value
 	$xml = [xml](Get-Content $psprojectFile)
 } 
 else 
@@ -27,12 +27,12 @@ else
 $defaultUsing = $xml.Project.Using | where { $_.File -eq 'default' }
 if (!$defaultUsing)
 {
-	$defaultUsing = $xml.CreateElement("Using", "http://schemas.postsharp.org/1.0/configuration");
-	$defaultUsing.SetAttribute("File", "default");
-	$xml.Project.AppendChild($defaultUsing);
+	$defaultUsing = $xml.CreateElement("Using", "http://schemas.postsharp.org/1.0/configuration")
+	$defaultUsing.SetAttribute("File", "default")
+	$xml.Project.AppendChild($defaultUsing)
 }
 
-$weaverFile = $path::Combine($toolsPath, "PostSharp.Toolkit.Diagnostics.Weaver.dll");
+$weaverFile = $path::Combine($toolsPath, "PostSharp.Toolkit.Diagnostics.Weaver.dll")
 
 # Make the path to the targets file relative.
 $projectUri = new-object Uri('file://' + $psprojectFile)
@@ -46,8 +46,8 @@ if ($toolkitWeaver)
 } 
 else 
 {
-	$toolkitWeaver = $xml.CreateElement("Using", "http://schemas.postsharp.org/1.0/configuration");
-	$toolkitWeaver.SetAttribute("File", $relativePath);
+	$toolkitWeaver = $xml.CreateElement("Using", "http://schemas.postsharp.org/1.0/configuration")
+	$toolkitWeaver.SetAttribute("File", $relativePath)
 	$xml.Project.InsertAfter($toolkitWeaver, $defaultUsing)
 }
 

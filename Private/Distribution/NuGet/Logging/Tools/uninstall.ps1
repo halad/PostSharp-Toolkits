@@ -14,13 +14,12 @@ if (!$psproj)
   return
 }
 
-$psprojectFile = $psproj.Properties.Item("FullPath").Value;
+$psprojectFile = $psproj.Properties.Item("FullPath").Value
 $xml = [xml](Get-Content $psprojectFile)
 
-$toolkitWeaver = $xml.Project.Using | where { $_.File -like '*PostSharp.Toolkit.Diagnostics.Weaver.dll*'}
-if ($toolkitWeaver)
-{
-	$xml.Project.RemoveChild($toolkitWeaver)
+$xml.Project.Using | where { $_.File -like '*PostSharp.Toolkit.Diagnostics.Weaver.dll*' } | foreach {
+  $_.ParentNode.RemoveChild($_)
+  "Removed the PostSharp Logging weaver"
 }
 
 $xml.Save($psprojectFile)
