@@ -7,8 +7,8 @@
     <ImageDir>$(BuildDirectory)\Build\bin</ImageDir>
     <IntermediateNuGetDir>$(ImageDir)\NuGet</IntermediateNuGetDir>
     
-    <PostSharpLoggingSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging</PostSharpLoggingSpecDir>
-    <PostSharpLoggingNLogSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging.NLog</PostSharpLoggingNLogSpecDir>
+    <PostSharpDiagnosticsSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging</PostSharpDiagnosticsSpecDir>
+    <PostSharpDiagnosticsNLogSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging.NLog</PostSharpDiagnosticsNLogSpecDir>
   </PropertyGroup>
   
   <ItemGroup>
@@ -18,12 +18,12 @@
   <Target Name="CreateSpecFiles">
     <MakeDir Directories="$(IntermediateNugetDir)"/>
     <Copy SourceFiles="@(NuGetSourceFiles)" DestinationFolder="$(IntermediateNuGetDir)"/>
-    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpLoggingToolkit.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpLoggingSpecDir)" />
-    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpLoggingToolkitForNLog.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpLoggingNLogSpecDir)" />
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsSpecDir)" />
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsNLogSpecDir)" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="CreateSpecFiles">
-    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpLoggingToolkit.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
-    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpLoggingToolkitForNLog.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
   </Target>
 </Project>
