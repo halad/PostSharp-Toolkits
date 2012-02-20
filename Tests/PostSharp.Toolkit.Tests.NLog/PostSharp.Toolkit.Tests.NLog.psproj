@@ -1,15 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!-- Default project used when PostSharp is detected according to project references. -->
 <Project xmlns="http://schemas.postsharp.org/1.0/configuration" ReferenceDirectory="{$ReferenceDirectory}">
-  
+
+  <Property Name="LoggingBackend" Value="nlog" />
+
   <Using File="default"/>
   <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Diagnostics.Weaver.dll"/>
+  <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Diagnostics.Weaver.NLog.dll"/>
 
   <Tasks>
     <XmlMulticast />
   </Tasks>
   <Data Name="XmlMulticast">
-    <LogAttribute xmlns="clr-namespace:PostSharp.Toolkit.Diagnostics;assembly:PostSharp.Toolkit.Diagnostics" AttributeTargetAssemblies="TestAssembly" />
+    <LogAttribute xmlns="clr-namespace:PostSharp.Toolkit.Diagnostics;assembly:PostSharp.Toolkit.Diagnostics" AttributeTargetAssemblies = "TestAssembly" />
   </Data>
 
 </Project>

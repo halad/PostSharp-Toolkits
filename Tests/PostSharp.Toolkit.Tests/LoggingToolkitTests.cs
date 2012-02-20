@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using PostSharp.Toolkit.Tests.Data;
+using TestAssembly;
 
 namespace PostSharp.Toolkit.Tests
 {
@@ -8,28 +8,36 @@ namespace PostSharp.Toolkit.Tests
     public class LoggingToolkitTests : ConsoleTestsFixture
     {
         [Test]
-        public void LoggingToolkit_AppliedToMethods_LogsEnteringAndExitingAMethod()
+        public void LoggingToolkit_Methods_LogsMethodEnterAndExit()
         {
             SimpleClass s = new SimpleClass();
             s.Method1();
 
             string output = OutputString.ToString();
-            StringAssert.Contains("Entering: PostSharp.Toolkit.Tests.Data.SimpleClass/Method1() : void (None)", output);
-            StringAssert.Contains("Exiting: PostSharp.Toolkit.Tests.Data.SimpleClass/Method1() : void (None)", output);
+            StringAssert.Contains("Entering: TestAssembly.SimpleClass/Method1() : void (None)", output);
+            StringAssert.Contains("Exiting: TestAssembly.SimpleClass/Method1() : void (None)", output);
         }
 
         [Test]
-        public void LoggingToolkit_AppliedToProperties_LogsGettingAndSettingProperties()
+        public void LoggingToolkit_Properties_LogsPropertyGetter()
         {
             SimpleClass s = new SimpleClass();
-            s.Property1 = "Test";
             string value = s.Property1;
             
             string output = OutputString.ToString();
-            StringAssert.Contains("Entering: PostSharp.Toolkit.Tests.Data.SimpleClass/set_Property1(string value) : void (None)", output);
-            StringAssert.Contains("Exiting: PostSharp.Toolkit.Tests.Data.SimpleClass/set_Property1(string value) : void (None)", output);
-            StringAssert.Contains("Entering: PostSharp.Toolkit.Tests.Data.SimpleClass/get_Property1() : string (None)", output);
-            StringAssert.Contains("Exiting: PostSharp.Toolkit.Tests.Data.SimpleClass/get_Property1() : string (None)", output);
+            StringAssert.Contains("Entering: TestAssembly.SimpleClass/get_Property1() : string (None)", output);
+            StringAssert.Contains("Exiting: TestAssembly.SimpleClass/get_Property1() : string (None)", output);
+        }
+
+        [Test]
+        public void LoggingToolkit_Properties_LogsPropertySetter()
+        {
+            SimpleClass s = new SimpleClass();
+            s.Property1 = "Test";
+            
+            string output = OutputString.ToString();
+            StringAssert.Contains("Entering: TestAssembly.SimpleClass/set_Property1(string value) : void (None)", output);
+            StringAssert.Contains("Exiting: TestAssembly.SimpleClass/set_Property1(string value) : void (None)", output);
         }
 
         [Test]
@@ -39,17 +47,7 @@ namespace PostSharp.Toolkit.Tests
             s.Field1 = "Test";
 
             string output = OutputString.ToString();
-            StringAssert.DoesNotContain(output, "Field1");
-        }
-
-        [Test]
-        public void LoggingToolkit_AppliedAtAssemblyLevel_AppliedOnTargetTypes()
-        {
-            SimpleClass s = new SimpleClass();
-            s.Method1();
-
-            string output = OutputString.ToString().Trim();
-            Assert.IsNotEmpty(output);
+            StringAssert.DoesNotContain("Field1", output);
         }
     }
 }

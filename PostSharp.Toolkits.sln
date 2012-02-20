@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnosti
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E79F9017-525A-458D-868D-37990CD4668B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Tests.NLog", "Tests\PostSharp.Toolkit.Tests.NLog\PostSharp.Toolkit.Tests.NLog.csproj", "{86F4EB82-8730-413A-BF44-9E09E1107B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "Tests\TestAssembly\TestAssembly.csproj", "{315DB367-6AB0-4D92-8CD8-4269C1321CAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,11 +41,21 @@ Global
 		{1A587F50-8933-4F6B-9EE9-E68504210FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A587F50-8933-4F6B-9EE9-E68504210FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A587F50-8933-4F6B-9EE9-E68504210FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86F4EB82-8730-413A-BF44-9E09E1107B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86F4EB82-8730-413A-BF44-9E09E1107B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86F4EB82-8730-413A-BF44-9E09E1107B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86F4EB82-8730-413A-BF44-9E09E1107B62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{315DB367-6AB0-4D92-8CD8-4269C1321CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{315DB367-6AB0-4D92-8CD8-4269C1321CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{315DB367-6AB0-4D92-8CD8-4269C1321CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{315DB367-6AB0-4D92-8CD8-4269C1321CAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF} = {E79F9017-525A-458D-868D-37990CD4668B}
+		{86F4EB82-8730-413A-BF44-9E09E1107B62} = {E79F9017-525A-458D-868D-37990CD4668B}
+		{315DB367-6AB0-4D92-8CD8-4269C1321CAE} = {E79F9017-525A-458D-868D-37990CD4668B}
 	EndGlobalSection
 EndGlobal

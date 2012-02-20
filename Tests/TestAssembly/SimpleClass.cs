@@ -1,6 +1,6 @@
 using System;
 
-namespace PostSharp.Toolkit.Tests.Data
+namespace TestAssembly
 {
     public class SimpleClass
     {
