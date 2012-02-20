@@ -2,11 +2,11 @@
 <package>
   <metadata>
     <id>PostSharpLoggingToolkitForNLog</id>
-    <version>0.1</version>
+    <version>0.0/version>
     <title>PostSharp Logging Toolkit for NLog</title>
     <authors>SharpCrafters s.r.o.</authors>
     <description>
-      Adds logging backed by NLog, powered by PostSharp.
+      NLog support for the PostSharp Logging Toolkit.
     </description>
     <summary>
     </summary>

@@ -2,11 +2,11 @@
 <package>
   <metadata>
     <id>PostSharpLoggingToolkit</id>
-    <version>0.1</version>
-    <title>PostSharp Logging Toolkit for NLog</title>
+    <version>0.0</version>
+    <title>PostSharp Logging Toolkit</title>
     <authors>SharpCrafters s.r.o.</authors>
     <description>
-      Toolkits framework for PostSharp.
+      A toolkit to add diagnostic instrumentation, such as logging and exception handling, powered by PostSharp.
     </description>
     <summary>
     </summary>
