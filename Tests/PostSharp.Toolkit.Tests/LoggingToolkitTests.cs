@@ -1,11 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using NUnit.Framework;
-using PostSharp.Toolkit.Diagnostics;
 using PostSharp.Toolkit.Tests.Data;
-
-[assembly: Log(AttributeTargetTypes = "PostSharp.Toolkit.Tests.Data.SimpleClass")]
 
 namespace PostSharp.Toolkit.Tests
 {
@@ -43,8 +38,8 @@ namespace PostSharp.Toolkit.Tests
             SimpleClass s = new SimpleClass();
             s.Field1 = "Test";
 
-            string output = OutputString.ToString().Trim();
-            Assert.IsEmpty(output);
+            string output = OutputString.ToString();
+            StringAssert.DoesNotContain(output, "Field1");
         }
 
         [Test]

@@ -2,7 +2,7 @@
 <!-- Default project used when PostSharp is detected according to project references. -->
 <Project xmlns="http://schemas.postsharp.org/1.0/configuration" ReferenceDirectory="{$ReferenceDirectory}">
 
-  <Property Name="LoggingBackend" Value="nlog" />
+  <Property Name="LoggingBackend" Value="console" />
   
   <Using File="default"/>
   <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Diagnostics.Weaver.dll"/>
@@ -12,7 +12,7 @@
     <XmlMulticast />
   </Tasks>
   <Data Name="XmlMulticast">
-    <LogAttribute xmlns="clr-namespace:PostSharp.Toolkit.Diagnostics;assembly:PostSharp.Toolkit.Diagnostics" AttributeTargetTypes="ConsoleApplication1.Program" AttributeTargetMembers="Main" />
+    <LogAttribute xmlns="clr-namespace:PostSharp.Toolkit.Diagnostics;assembly:PostSharp.Toolkit.Diagnostics" AttributeTargetTypes="PostSharp.Toolkit.Tests.Data.*" />
   </Data>
 
 </Project>

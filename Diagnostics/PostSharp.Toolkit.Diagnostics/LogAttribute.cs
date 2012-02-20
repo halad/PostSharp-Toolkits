@@ -5,8 +5,13 @@ using PostSharp.Extensibility;
 namespace PostSharp.Toolkit.Diagnostics
 {
     [Serializable]
-    [MulticastAttributeUsage(MulticastTargets.Method)]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Assembly)]
+    [AttributeUsage(
+      AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Module | AttributeTargets.Struct,
+      AllowMultiple = true,
+      Inherited = false)]
+    [MulticastAttributeUsage(
+    MulticastTargets.InstanceConstructor | MulticastTargets.StaticConstructor | MulticastTargets.Method,
+      AllowMultiple = true)]
     public sealed class LogAttribute : MethodLevelAspect, ILogAspect
     {
     }

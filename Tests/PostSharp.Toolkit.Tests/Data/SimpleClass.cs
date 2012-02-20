@@ -1,3 +1,5 @@
+using System;
+
 namespace PostSharp.Toolkit.Tests.Data
 {
     public class SimpleClass
@@ -7,5 +9,10 @@ namespace PostSharp.Toolkit.Tests.Data
         public string Property1 { get; set; }
 
         public void Method1() { }
+
+        public void MethodThrowsInvalidOperationException()
+        {
+            throw new InvalidOperationException();
+        }
     }
 }

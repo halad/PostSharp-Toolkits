@@ -7,24 +7,15 @@ namespace PostSharp.Toolkit.Tests
 {
     public class ConsoleTestsFixture
     {
-        private StringWriter textWriter;
-        private StringBuilder outputString;
+        public StringWriter TextWriter { get; private set; }
 
-        public StringWriter TextWriter
-        {
-            get { return this.textWriter; }
-        }
-
-        public StringBuilder OutputString
-        {
-            get { return this.outputString; }
-        }
+        public StringBuilder OutputString { get; private set; }
 
         [SetUp]
         public virtual void SetUp()
         {
-            this.outputString = new StringBuilder();
-            this.textWriter = new StringWriter(this.OutputString);
+            this.OutputString = new StringBuilder();
+            this.TextWriter = new StringWriter(this.OutputString);
             Console.SetOut(this.TextWriter);
         }
 
