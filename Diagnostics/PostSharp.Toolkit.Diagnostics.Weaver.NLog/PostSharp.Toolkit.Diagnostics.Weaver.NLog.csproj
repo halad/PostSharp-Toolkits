@@ -48,6 +48,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Logging\ContainingTypeBuilder.cs" />
     <Compile Include="NLogProjectConfiguration.cs" />
     <Compile Include="Logging\NLogBackend.cs" />
