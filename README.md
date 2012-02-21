@@ -23,7 +23,7 @@ The **PostSharp Diagnostics Toolkit** is available on NuGet. NLog support is ava
 
 ### Getting started with PostSharp Diagnostics Toolkit for NLog
 
- - **Step 1:** Add the **PostSharp Diagnostics Toolkit for NLog** from NuGet to the assembly you wish to instrument. It downloads the required dependencies automatically (includes PostSharp 2.1 SP1, NLog and the required PostSharp Logging Toolkit base).  
+ - **Step 1:** Add the **PostSharp Diagnostics Toolkit for NLog** from NuGet to the assembly you wish to instrument. It downloads the required dependencies automatically (includes PostSharp 2.1 SP1, NLog and the required PostSharp Diagnostics Toolkit base).  
 
  - **Step 2:** Configure NLog using the desired configuration (see the [official documentation](http://nlog-project.org/wiki/Configuration_file) for support), or get the **NLog.Config** package from NuGet.
 
