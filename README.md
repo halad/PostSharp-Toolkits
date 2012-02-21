@@ -31,7 +31,7 @@ The **PostSharp Diagnostics Toolkit** is available on NuGet. NLog support is ava
 
 ### How does this work?
 
-To learn about how do the PostSharp Toolkits work, please read the blog post **Introducing PostSharp Toolkits** on the [SharpCrafters](http://www.sharpcrafters.com) website.
+To learn about how do the PostSharp Toolkits work, please read the blog post [**Introducing PostSharp Toolkits**](http://www.sharpcrafters.com/blog/post/introducing-postsharp-toolkits.aspx) on the [SharpCrafters](http://www.sharpcrafters.com) website.
 
 # Questions? Suggestions? Bugs?
 
