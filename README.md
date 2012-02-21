@@ -13,17 +13,17 @@ Powered by [PostSharp](http://www.sharpcrafters.com), the most complete AOP solu
 
 ## What toolkits currently exist?
 
-Currently, we're working on the **PostSharp Logging Toolkit** - a diagnostics instrumentation toolkit that adds logging, exception handling, performance counters and feature tracking to your application.
+Currently, we're working on the **PostSharp Diagnostics Toolkit** - an instrumentation toolkit that adds diagnostics feautres, such as logging, exception handling, performance counters and feature tracking to your application.
 
-The PostSharp Logging Toolkit includes pluggable support for the leading logging frameworks, such as NLog. Support for additional frameworks is coming soon!
+The PostSharp Diagnostics Toolkit includes pluggable support for the leading logging frameworks, such as NLog. Support for additional frameworks is coming soon!
 
-## How to install the PostSharp Logging Toolkit?
+## How to install the PostSharp Diagnostics Toolkit?
 
-The **PostSharp Logging Toolkit** is available on NuGet. NLog support is available via the **PostSharp Logging Toolkit for NLog** package.
+The **PostSharp Diagnostics Toolkit** is available on NuGet. NLog support is available via the **PostSharp Diagnostics Toolkit for NLog** package.
 
-### Getting started with PostSharp Logging Toolkit for NLog
+### Getting started with PostSharp Diagnostics Toolkit for NLog
 
- - **Step 1:** Add the **PostSharp Logging Toolkit for NLog** from NuGet to the assembly you wish to instrument. It downloads the required dependencies automatically (includes PostSharp 2.1 SP1, NLog and the required PostSharp Logging Toolkit base).  
+ - **Step 1:** Add the **PostSharp Diagnostics Toolkit for NLog** from NuGet to the assembly you wish to instrument. It downloads the required dependencies automatically (includes PostSharp 2.1 SP1, NLog and the required PostSharp Logging Toolkit base).  
 
  - **Step 2:** Configure NLog using the desired configuration (see the [official documentation](http://nlog-project.org/wiki/Configuration_file) for support), or get the **NLog.Config** package from NuGet.
 
@@ -32,7 +32,6 @@ The **PostSharp Logging Toolkit** is available on NuGet. NLog support is availab
 ### How does this work?
 
 To learn about how do the PostSharp Toolkits work, please read the blog post **Introducing PostSharp Toolkits** on the [SharpCrafters](http://www.sharpcrafters.com) website.
-
 
 # Questions? Suggestions? Bugs?
 
