@@ -6,7 +6,7 @@ Welcome to PostSharp Toolkits!
 ## What are PostSharp Toolkits?
 
 
-PostSharp Toolkits is a collection of ready-made solutions for adding logging, exception handling and performance monitoring to your application with no changes to your source code!
+PostSharp Toolkits are a collection of ready-made solutions for adding logging, exception handling and performance monitoring to your application with no changes to your source code!
 
 Powered by [PostSharp](http://www.sharpcrafters.com), the most complete AOP solution for .NET, the PostSharp Toolkits build upon the raw power of Aspect-Oriented Programming to seamlessly apply those solutions throughout your application.
 
