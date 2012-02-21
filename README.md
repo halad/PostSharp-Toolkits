@@ -3,7 +3,7 @@
 
 Welcome to PostSharp Toolkits!
 
-## What is PostSharp Toolkits?
+## What are PostSharp Toolkits?
 
 
 PostSharp Toolkits is a collection of ready-made solutions for adding logging, exception handling and performance monitoring to your application with no changes to your source code!
