@@ -19,7 +19,13 @@ The PostSharp Diagnostics Toolkit includes pluggable support for the leading log
 
 ## How to install the PostSharp Diagnostics Toolkit?
 
-The **PostSharp Diagnostics Toolkit** is available on NuGet. NLog support is available via the **PostSharp Diagnostics Toolkit for NLog** package.
+The **PostSharp Diagnostics Toolkit** is available on NuGet:
+
+![PostSharp Diagnostics Toolkit](http://i.imgur.com/ZxhAo.png)
+
+NLog support is available via the **PostSharp Diagnostics Toolkit for NLog** package:
+
+![PostSharp Diagnostics Toolkit for NLog](http://i.imgur.com/NtqoX.png)
 
 ### Getting started with PostSharp Diagnostics Toolkit for NLog
 
