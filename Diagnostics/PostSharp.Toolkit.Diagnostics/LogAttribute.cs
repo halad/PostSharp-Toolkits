@@ -12,6 +12,7 @@ namespace PostSharp.Toolkit.Diagnostics
     [MulticastAttributeUsage(
     MulticastTargets.InstanceConstructor | MulticastTargets.StaticConstructor | MulticastTargets.Method,
       AllowMultiple = true)]
+    [Metric("UsedFeatures", "Toolkit.Diagnostics.Logging")]
     public sealed class LogAttribute : MethodLevelAspect, ILogAspect
     {
     }
