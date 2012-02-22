@@ -9,6 +9,7 @@
     
     <PostSharpDiagnosticsSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging</PostSharpDiagnosticsSpecDir>
     <PostSharpDiagnosticsNLogSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging.NLog</PostSharpDiagnosticsNLogSpecDir>
+    <PostSharpDiagnosticsLog4NetSpecDir>$(MSBuildProjectDirectory)\NuGet\Logging.Log4Net</PostSharpDiagnosticsLog4NetSpecDir>
   </PropertyGroup>
   
   <ItemGroup>
@@ -20,10 +21,12 @@
     <Copy SourceFiles="@(NuGetSourceFiles)" DestinationFolder="$(IntermediateNuGetDir)"/>
     <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsSpecDir)" />
     <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsNLogSpecDir)" />
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForLog4Net.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsLog4NetSpecDir)" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="CreateSpecFiles">
     <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
     <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForLog4Net.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
   </Target>
 </Project>

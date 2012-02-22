@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>PostSharpDiagnosticsToolkit</id>
-    <version>0.0</version>
+    <version>0.1</version>
     <title>PostSharp Diagnostics Toolkit</title>
     <authors>SharpCrafters s.r.o.</authors>
     <description>

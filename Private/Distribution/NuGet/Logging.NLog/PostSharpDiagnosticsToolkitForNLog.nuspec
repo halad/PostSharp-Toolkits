@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>PostSharpDiagnosticsToolkitForNLog</id>
-    <version>0.0</version>
+    <version>0.1</version>
     <title>PostSharp Diagnostics Toolkit for NLog</title>
     <authors>SharpCrafters s.r.o.</authors>
     <description>
@@ -18,7 +18,7 @@
     <tags>postsharp sharcrafters aop aspect monitoring instrumentation log logging tracing nlog log4net elmah toolkit toolkits</tags>
     <dependencies>
       <dependency id="PostSharp" version="2.1.6.4" />
-      <dependency id="PostSharpDiagnosticsToolkit" version="0.0" />
+      <dependency id="PostSharpDiagnosticsToolkit" version="0.1" />
       <dependency id="NLog" version="2.0.0.2000" />
     </dependencies>
   </metadata>

@@ -6,7 +6,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Context
     public abstract class LoggingContextBuilder
     {
         protected readonly ModuleDeclaration module;
-        protected readonly ITypeSignature loggerType;
+        private readonly ITypeSignature loggerType;
 
         protected LoggingContextBuilder(ModuleDeclaration module, ITypeSignature loggerType)
         {
