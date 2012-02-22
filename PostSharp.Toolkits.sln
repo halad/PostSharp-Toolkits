@@ -19,6 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Tests.NLo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "Tests\TestAssembly\TestAssembly.csproj", "{315DB367-6AB0-4D92-8CD8-4269C1321CAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Diagnostics.Weaver.Log4Net", "Diagnostics\PostSharp.Toolkit.Diagnostics.Weaver.Log4Net\PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.csproj", "{6CB43E63-09FB-4317-90AF-536D16833942}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostSharp.Toolkit.Tests.Log4Net", "Tests\PostSharp.Toolkit.Tests.Log4Net\PostSharp.Toolkit.Tests.Log4Net.csproj", "{92CEEEE5-EA8D-4A79-B4C5-4F6C9788E3D5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6CB43E63-09FB-4317-90AF-536D16833942} = {6CB43E63-09FB-4317-90AF-536D16833942}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +56,14 @@ Global
 		{315DB367-6AB0-4D92-8CD8-4269C1321CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{315DB367-6AB0-4D92-8CD8-4269C1321CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{315DB367-6AB0-4D92-8CD8-4269C1321CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB43E63-09FB-4317-90AF-536D16833942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB43E63-09FB-4317-90AF-536D16833942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB43E63-09FB-4317-90AF-536D16833942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB43E63-09FB-4317-90AF-536D16833942}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92CEEEE5-EA8D-4A79-B4C5-4F6C9788E3D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92CEEEE5-EA8D-4A79-B4C5-4F6C9788E3D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92CEEEE5-EA8D-4A79-B4C5-4F6C9788E3D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92CEEEE5-EA8D-4A79-B4C5-4F6C9788E3D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,5 +72,6 @@ Global
 		{6A747DDC-F969-4BF7-8925-10A7E9CA3FFF} = {E79F9017-525A-458D-868D-37990CD4668B}
 		{86F4EB82-8730-413A-BF44-9E09E1107B62} = {E79F9017-525A-458D-868D-37990CD4668B}
 		{315DB367-6AB0-4D92-8CD8-4269C1321CAE} = {E79F9017-525A-458D-868D-37990CD4668B}
+		{92CEEEE5-EA8D-4A79-B4C5-4F6C9788E3D5} = {E79F9017-525A-458D-868D-37990CD4668B}
 	EndGlobalSection
 EndGlobal

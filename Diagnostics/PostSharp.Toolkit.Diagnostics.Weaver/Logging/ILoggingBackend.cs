@@ -8,9 +8,4 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         void Initialize(ModuleDeclaration module);
         ILoggingBackendInstance CreateInstance(AspectWeaverInstance aspectWeaverInstance);
     }
-    
-    public interface ILoggingBackendInstance
-    {
-        void EmitWrite(string message, InstructionWriter instructionWriter);
-    }
 }
