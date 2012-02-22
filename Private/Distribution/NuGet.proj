@@ -25,8 +25,8 @@
   </Target>
 
   <Target Name="Build" DependsOnTargets="CreateSpecFiles">
-    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
-    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
-    <Exec Command="..\Dependencies\NuGet\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForLog4Net.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="$(BuildDirectory)\.nuget\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="$(BuildDirectory)\.nuget\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
+    <Exec Command="$(BuildDirectory)\.nuget\NuGet.exe pack $(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForLog4Net.nuspec /BasePath $(ImageDir) /Verbose /OutputDirectory $(IntermediateNugetDir)" /> 
   </Target>
 </Project>
