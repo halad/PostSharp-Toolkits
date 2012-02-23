@@ -5,12 +5,12 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Context
 {
     public abstract class LoggingContextBuilder
     {
-        protected readonly ModuleDeclaration module;
+        protected readonly ModuleDeclaration Module;
         private readonly ITypeSignature loggerType;
 
         protected LoggingContextBuilder(ModuleDeclaration module, ITypeSignature loggerType)
         {
-            this.module = module;
+            this.Module = module;
             this.loggerType = loggerType;
         }
 
@@ -49,8 +49,8 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Context
 
         protected IMethod FindMethod(string methodName, Predicate<MethodDefDeclaration> predicate = null)
         {
-            return predicate != null ? this.module.FindMethod(this.loggerType, methodName, predicate) 
-                                     : this.module.FindMethod(this.loggerType, methodName);
+            return predicate != null ? this.Module.FindMethod(this.loggerType, methodName, predicate) 
+                                     : this.Module.FindMethod(this.loggerType, methodName);
         }
     }
 }

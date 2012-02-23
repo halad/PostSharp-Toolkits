@@ -30,7 +30,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 
         protected override IMethod GetLoggerInitializerMethod()
         {
-            return module.FindMethod(module.FindType(typeof(LogManager)), "GetLogger",
+            return Module.FindMethod(Module.FindType(typeof(LogManager)), "GetLogger",
                 method => method.Parameters.Count == 1 &&
                 IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
         }
