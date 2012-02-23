@@ -1,6 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
-  <Import Project="..\Dependencies\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>  
+  <Import Project="..\Dependencies\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="Versioning.targets"/>
 
   <PropertyGroup>
     <BuildDirectory>..\..</BuildDirectory>
@@ -16,12 +17,15 @@
     <NuGetSourceFiles Include="NuGet\**\*.nuspec" />
   </ItemGroup>
   
-  <Target Name="CreateSpecFiles">
+  <Target Name="CreateSpecFiles" DependsOnTargets="GetRevisionNumber">
     <MakeDir Directories="$(IntermediateNugetDir)"/>
     <Copy SourceFiles="@(NuGetSourceFiles)" DestinationFolder="$(IntermediateNuGetDir)"/>
     <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsSpecDir)" />
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkit.nuspec" Regex="_VERSION_" ReplacementText="$(Version)" />
     <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsNLogSpecDir)" />
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForNLog.nuspec" Regex="_VERSION_" ReplacementText="$(Version)" />
     <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForLog4Net.nuspec" Regex="_SRC_" ReplacementText="$(PostSharpDiagnosticsLog4NetSpecDir)" />
+    <FileUpdate Files="$(IntermediateNuGetDir)\PostSharpDiagnosticsToolkitForLog4Net.nuspec" Regex="_VERSION_" ReplacementText="$(Version)" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="CreateSpecFiles">

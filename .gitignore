@@ -34,3 +34,5 @@ lint.db
 packages/*
 *.ncrunchsolution
 *.ncrunchsolution.user
+/AssemblyVersion.cs
+*.version
