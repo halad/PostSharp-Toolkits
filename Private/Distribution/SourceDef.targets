@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Files for source distribution -->
+  <PropertyGroup>
+    <SourceExclude>
+      $(PostSharpDirectory)\Build\intermediate\**;
+      $(PostSharpDirectory)\**\bin\**;
+      $(PostSharpDirectory)\**\obj\**;
+      $(PostSharpDirectory)\**\ClientBin\**;
+      $(PostSharpDirectory)\**\.svn\**;
+      $(PostSharpDirectory)\**\*.svn-base;
+      $(PostSharpDirectory)\**\*.svn-work;
+      $(PostSharpDirectory)\Build\releases\**;
+      $(PostSharpDirectory)\Build\Config.targets;
+      $(PostSharpDirectory)\Build\#InSourceControl;
+      $(PostSharpDirectory)\Samples\PostSharp-Samples-Src.targets;
+      $(PostSharpDirectory)\Samples\ModifyThirdAssembly\output\**;
+      $(PostSharpDirectory)\Core\Test\NUnit\**;
+      $(PostSharpDirectory)\**\*.suo;
+      $(PostSharpDirectory)\**\*.user;
+      $(PostSharpDirectory)\**\*.bak;
+      $(PostSharpDirectory)\**\*.log;
+      $(PostSharpDirectory)\**\*.duo;
+      $(PostSharpDirectory)\**\*.il;
+      $(PostSharpDirectory)\**\*.res;
+      $(PostSharpDirectory)\**\*.cache;
+      $(PostSharpDirectory)\**\*.ncb;
+      $(PostSharpDirectory)\**\*.gpState;
+      $(PostSharpDirectory)\**\*.resharper;
+      $(PostSharpDirectory)\**\~*;
+      $(PostSharpDirectory)\**\Ankh.Load;
+      $(PostSharpDirectory)\ipch\**\*;
+      $(PostSharpDirectory)\**\_ReSharper*\**\*;
+      $(PostSharpDirectory)\PostSharp-2.1.sdf;
+    </SourceExclude>
+    <PublicSourceDef>
+      $(PostSharpDirectory)\Build\**;
+      $(PostSharpDirectory)\Core\**;
+      $(PostSharpDirectory)\Obfuscator\**;
+      $(PostSharpDirectory)\Dependencies\**;
+      $(PostSharpDirectory)\*
+    </PublicSourceDef>
+  </PropertyGroup>
+  
+
+  <Target Name="SourceDef">
+    <Error Condition="!Exists('$(PostSharpDirectory)\PostSharp.proj')" Text="Property PostSharpDirectory is invalid. "/>
+
+    <Message Text="Computing the fileset of source code files."/>
+
+    <ItemGroup>
+      <SourceFile Include="$(PostSharpDirectory)\**\*" Exclude="$(SourceExclude)"/>
+    </ItemGroup>
+  </Target>
+
+
+  <Target Name="PublicSourceDef">
+    <Error Condition="!Exists('$(PostSharpDirectory)\PostSharp.proj')" Text="Property PostSharpDirectory is invalid. "/>
+
+    <Message Text="Computing the fileset of source code files (for inclusion in source code distribution)."/>
+
+    <ItemGroup>
+      <PublicSourceFile Include="$(PublicSourceDef)" Exclude="$(SourceExclude)"/>
+    </ItemGroup>
+  </Target>
+
+
+
+</Project>	
+
