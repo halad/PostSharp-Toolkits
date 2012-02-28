@@ -1,6 +1,5 @@
 using System;
 using PostSharp.Sdk.CodeModel;
-using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Writers;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console
 {
@@ -8,7 +7,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console
     {
         protected override ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module)
         {
-            return new WriteLineBackendWriter(module, typeof(System.Console));
+            return new ConsoleWriteLineWriter(module, typeof(System.Console));
         }
     }
 }
