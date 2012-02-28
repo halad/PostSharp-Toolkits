@@ -32,7 +32,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
                 },
                 Services = new ServiceConfigurationCollection
                 {
-                    new ServiceConfiguration(project => new ConsoleLoggingBackendProvider())
+                    new ServiceConfiguration(project => new ConsoleBackendProvider())
                 },
                 TaskFactories = new Dictionary<string, CreateTaskDelegate>
                 {

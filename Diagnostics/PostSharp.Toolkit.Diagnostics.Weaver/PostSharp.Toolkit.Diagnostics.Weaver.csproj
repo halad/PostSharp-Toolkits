@@ -41,7 +41,6 @@
       <HintPath>..\..\..\PostSharp-2.1\Build\bin\Debug\PostSharp.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AssemblyVersion.cs">
@@ -53,15 +52,18 @@
     <Compile Include="InstrumentationMessageSource.cs" />
     <Compile Include="InstrumentationPlugIn.cs" />
     <Compile Include="InstrumentationProjectConfiguration.cs" />
-    <Compile Include="Logging\Console\ConsoleLoggingBackend.cs" />
-    <Compile Include="Logging\Console\ConsoleLoggingBackendProvider.cs" />
-    <Compile Include="Logging\LoggingContexContainingTypeBuilder.cs" />
-    <Compile Include="Logging\Context\LoggingContext.cs" />
-    <Compile Include="Logging\Context\LoggingContextBackend.cs" />
-    <Compile Include="Logging\Context\LoggingContextBuilder.cs" />
+    <Compile Include="Logging\Console\ConsoleBackend.cs" />
+    <Compile Include="Logging\Console\ConsoleBackendProvider.cs" />
+    <Compile Include="Logging\Trace\TraceBackendProvider.cs" />
+    <Compile Include="Logging\WriteLineBackendWriter.cs" />
+    <Compile Include="Logging\LoggerBasedBackend.cs" />
+    <Compile Include="Logging\LoggingBackendInstanceBase.cs" />
+    <Compile Include="Logging\LoggingBackend.cs" />
+    <Compile Include="Logging\LoggingContextContainingTypeBuilder.cs" />
     <Compile Include="Logging\ILoggingBackend.cs" />
     <Compile Include="Logging\ILoggingBackendInstance.cs" />
     <Compile Include="Logging\ILoggingBackendProvider.cs" />
+    <Compile Include="Logging\Trace\TraceBackend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logging\LoggingAspectTransformation.cs" />
     <Compile Include="Logging\LoggingAspectWeaver.cs" />

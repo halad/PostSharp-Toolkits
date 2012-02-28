@@ -4,11 +4,10 @@ using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeWeaver;
 using PostSharp.Sdk.Collections;
 using PostSharp.Sdk.Utilities;
-using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Context;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
-    public sealed class LoggingContexContainingTypeBuilder
+    public sealed class LoggingContextContainingTypeBuilder
     {
         private readonly ModuleDeclaration module;
         private readonly TypeDefDeclaration containingType;
@@ -18,7 +17,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         private InstructionSequence returnSequence;
         private InstructionBlock constructorBlock;
 
-        public LoggingContexContainingTypeBuilder(ModuleDeclaration module)
+        public LoggingContextContainingTypeBuilder(ModuleDeclaration module)
         {
             this.module = module;
             this.weavingHelper = new WeavingHelper(module);
@@ -66,7 +65,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             return logCategoriesType;
         }
 
-        public FieldDefDeclaration CreateLoggerField(string category, LoggingContext loggingContext)
+        public FieldDefDeclaration CreateLoggerField(string category, ILoggingBackendWriter backendWriter)
         {
             string fieldName = string.Format("l{0}", this.containingType.Fields.Count + 1);
 
@@ -74,7 +73,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             {
                 Name = fieldName,
                 Attributes = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.InitOnly,
-                FieldType = loggingContext.LoggerType
+                FieldType = backendWriter.LoggerType
             };
             this.containingType.Fields.Add(loggerFieldDef);
 
@@ -83,8 +82,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                                                                                         this.returnSequence);
 
             this.writer.AttachInstructionSequence(sequence);
-            this.writer.EmitInstructionString(OpCodeNumber.Ldstr, category);
-            this.writer.EmitInstructionMethod(OpCodeNumber.Call, loggingContext.LoggerInitializerMethod);
+            backendWriter.EmitInitialization(writer, category);
             this.writer.EmitInstructionField(OpCodeNumber.Stsfld, loggerFieldDef);
             this.writer.DetachInstructionSequence();
 

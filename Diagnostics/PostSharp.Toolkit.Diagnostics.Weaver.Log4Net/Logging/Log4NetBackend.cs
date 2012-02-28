@@ -1,14 +1,14 @@
 ﻿using System;
 using PostSharp.Sdk.CodeModel;
-using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Context;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 {
-    internal sealed class Log4NetBackend : LoggingContextBackend
+    internal sealed class Log4NetBackend : LoggerBasedBackend
     {
-        protected override LoggingContext CreateContext(ModuleDeclaration module)
+        protected override ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module)
         {
-            return new Log4NetContextBuilder(module).CreateContext();
+            return new Log4NetBackendWriter(module);
         }
     }
 }

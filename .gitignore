@@ -36,3 +36,4 @@ packages/*
 *.ncrunchsolution.user
 /AssemblyVersion.cs
 *.version
+Private/Distribution/source-status

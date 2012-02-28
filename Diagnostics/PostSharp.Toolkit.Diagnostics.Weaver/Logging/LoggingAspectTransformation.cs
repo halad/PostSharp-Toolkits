@@ -93,7 +93,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     InstructionSequence sequence = block.AddInstructionSequence(null, NodePosition.After, null);
 
                     writer.AttachInstructionSequence(sequence);
-                    this.backendInstance.EmitWrite(message, writer);
+                    this.backendInstance.EmitWrite(writer, message, LogLevel.Trace);
                     writer.DetachInstructionSequence();
                 }
             }
