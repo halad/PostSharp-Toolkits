@@ -1,5 +1,6 @@
 ﻿using System;
 using PostSharp.Sdk.CodeModel;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Writers;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
 {

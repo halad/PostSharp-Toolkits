@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using NLog;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeModel.TypeSignatures;
@@ -7,53 +6,101 @@ using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 {
-    internal sealed class NLogContext : ILoggingContext
+    internal sealed class NLogContext : LoggingContext
     {
-        private readonly ITypeSignature loggerType;
-        private readonly IMethod loggerInitializerMethod;
+        private readonly Predicate<MethodDefDeclaration> messageOverloadPredicate;
 
         public NLogContext(ModuleDeclaration module)
+            : base(module, module.FindType(typeof(Logger)))
         {
-            this.loggerType = module.FindType(typeof(Logger));
+            // matches Logger.Foo(string)
+            this.messageOverloadPredicate = 
+                method => method.Parameters.Count == 1 &&
+                          IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String);
 
-            this.loggerInitializerMethod =  module.FindMethod(module.FindType(typeof(LogManager)), "GetLogger", 
-                method => method.Parameters.Count == 1 && 
+            InitializeContext();
+        }
+
+        protected override IMethod GetInitializerMethod()
+        {
+            return Module.FindMethod(Module.FindType(typeof(LogManager)), "GetLogger",
+                method => method.Parameters.Count == 1 &&
                 IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
         }
 
-        public ITypeSignature LoggerType
+        protected override IMethod GetTraceMethod()
         {
-            get { return this.loggerType; }
+            return FindMethod("Trace", this.messageOverloadPredicate);
         }
 
-        public void EmitInitialization(InstructionWriter writer)
+        protected override IMethod GetTraceExceptionMethod()
         {
-            writer.EmitInstructionMethod(OpCodeNumber.Call, this.loggerInitializerMethod);
+            return FindMethod("TraceException");
         }
 
-        public void EmitTrace(InstructionWriter writer, string message, Exception exception = null)
+        protected override IMethod GetInfoMethod()
         {
-            throw new NotImplementedException();
+            return FindMethod("Info", this.messageOverloadPredicate);
         }
 
-        public void EmitInfo(InstructionWriter writer, string message, Exception exception = null)
+        protected override IMethod GetInfoExceptionMethod()
         {
-            throw new NotImplementedException();
+            return FindMethod("InfoException");
         }
 
-        public void EmitWarning(InstructionWriter writer, string message, Exception exception = null)
+        protected override IMethod GetWarningMethod()
         {
-            throw new NotImplementedException();
+            return FindMethod("Warn", this.messageOverloadPredicate);
         }
 
-        public void EmitError(InstructionWriter writer, string message, Exception exception = null)
+        protected override IMethod GetWarningExceptionMethod()
         {
-            throw new NotImplementedException();
+            return FindMethod("WarnException");
         }
 
-        public void EmitFatal(InstructionWriter writer, string message, Exception exception = null)
+        protected override IMethod GetErrorMethod()
         {
-            throw new NotImplementedException();
+            return FindMethod("Error", this.messageOverloadPredicate);
+        }
+
+        protected override IMethod GetErrorExceptionMethod()
+        {
+            return FindMethod("ErrorException");
+        }
+
+        protected override IMethod GetFatalMethod()
+        {
+            return FindMethod("Fatal", this.messageOverloadPredicate);
+        }
+
+        protected override IMethod GetFatalExceptionMethod()
+        {
+            return FindMethod("FatalException");
+        }
+
+        protected override IMethod GetIsTraceEnabledMethod()
+        {
+            return FindMethod("get_IsDebugEnabled");
+        }
+
+        protected override IMethod GetIsInfoEnabledMethod()
+        {
+            return FindMethod("get_IsInfoEnabled");
+        }
+
+        protected override IMethod GetIsWarningEnabledMethod()
+        {
+            return FindMethod("get_IsWarnEnabled");
+        }
+
+        protected override IMethod GetIsErrorEnabledMethod()
+        {
+            return FindMethod("get_IsErrorEnabled");
+        }
+
+        protected override IMethod GetIsFatalEnabledMethod()
+        {
+            return FindMethod("get_IsFatalEnabled");
         }
     }
 }

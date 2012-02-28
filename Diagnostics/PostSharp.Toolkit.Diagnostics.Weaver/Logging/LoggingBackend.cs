@@ -6,11 +6,16 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     public abstract class LoggingBackend : ILoggingBackend
     {
-        protected ILoggingBackendWriter BackendWriter;
+        private ILoggingBackendWriter backendWriter;
+
+        protected ILoggingBackendWriter BackendWriter 
+        {
+            get { return this.backendWriter; }
+        }
 
         public virtual void Initialize(ModuleDeclaration module)
         {
-            this.BackendWriter = CreateBackendWriter(module);
+            this.backendWriter = CreateBackendWriter(module);
         }
 
         protected abstract ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module);

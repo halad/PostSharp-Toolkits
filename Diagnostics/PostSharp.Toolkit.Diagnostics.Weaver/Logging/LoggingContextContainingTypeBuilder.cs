@@ -65,7 +65,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             return logCategoriesType;
         }
 
-        public FieldDefDeclaration CreateLoggerField(string category, ILoggingBackendWriter backendWriter)
+        public FieldDefDeclaration CreateLoggerField(string category, LoggingContext loggingContext)
         {
             string fieldName = string.Format("l{0}", this.containingType.Fields.Count + 1);
 
@@ -73,7 +73,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             {
                 Name = fieldName,
                 Attributes = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.InitOnly,
-                FieldType = backendWriter.LoggerType
+                FieldType = loggingContext.LoggerType
             };
             this.containingType.Fields.Add(loggerFieldDef);
 
@@ -82,7 +82,8 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                                                                                         this.returnSequence);
 
             this.writer.AttachInstructionSequence(sequence);
-            backendWriter.EmitInitialization(writer, category);
+            this.writer.EmitInstructionString(OpCodeNumber.Ldstr, category);
+            this.writer.EmitInstructionMethod(OpCodeNumber.Call, loggingContext.InitializerMethod);
             this.writer.EmitInstructionField(OpCodeNumber.Stsfld, loggerFieldDef);
             this.writer.DetachInstructionSequence();
 

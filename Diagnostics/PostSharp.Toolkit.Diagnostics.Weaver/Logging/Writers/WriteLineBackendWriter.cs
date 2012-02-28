@@ -2,23 +2,18 @@ using System;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeModel.TypeSignatures;
 
-namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Writers
 {
     internal sealed class WriteLineBackendWriter : LoggingBackendWriter
     {
         private readonly IMethod writeLineMethod;
 
         public WriteLineBackendWriter(ModuleDeclaration module, Type backendType)
-            : base(module, module.FindType(backendType))
+            : base(null)
         {
-            this.writeLineMethod = module.FindMethod(LoggerType, "WriteLine",
+            this.writeLineMethod = module.FindMethod(module.FindType(backendType), "WriteLine",
                 method => method.Parameters.Count == 1 &&
                           IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
-        }
-
-        public override void EmitInitialization(InstructionWriter writer, string category)
-        {
-            // no initialization required
         }
 
         public override void EmitTrace(InstructionWriter writer, string message, Exception exception = null)

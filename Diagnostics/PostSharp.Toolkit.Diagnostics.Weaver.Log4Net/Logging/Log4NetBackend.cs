@@ -1,6 +1,7 @@
 ﻿using System;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Writers;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 {
@@ -8,7 +9,9 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
     {
         protected override ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module)
         {
-            return new Log4NetBackendWriter(module);
+            LoggingContext log4NetContext = new Log4NetContext(module);
+
+            return new LoggingContextBackendWriter(log4NetContext);
         }
     }
 }

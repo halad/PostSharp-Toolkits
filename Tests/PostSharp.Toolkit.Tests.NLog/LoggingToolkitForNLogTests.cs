@@ -16,8 +16,8 @@ namespace PostSharp.Toolkit.Tests.NLog
             s.Method1();
             
             string output = OutputString.ToString();
-            StringAssert.Contains("INFO|TestAssembly.SimpleClass|Entering: TestAssembly.SimpleClass/Method1()", output);
-            StringAssert.Contains("INFO|TestAssembly.SimpleClass|Exiting: TestAssembly.SimpleClass/Method1()", output);
+            StringAssert.Contains("TRACE|TestAssembly.SimpleClass|Entering: TestAssembly.SimpleClass/Method1()", output);
+            StringAssert.Contains("TRACE|TestAssembly.SimpleClass|Exiting: TestAssembly.SimpleClass/Method1()", output);
         }
 
         [Test]
@@ -27,8 +27,8 @@ namespace PostSharp.Toolkit.Tests.NLog
             string value = s.Property1;
 
             string output = OutputString.ToString();
-            StringAssert.Contains("INFO|TestAssembly.SimpleClass|Entering: TestAssembly.SimpleClass/get_Property1()", output);
-            StringAssert.Contains("INFO|TestAssembly.SimpleClass|Exiting: TestAssembly.SimpleClass/get_Property1()", output);
+            StringAssert.Contains("TRACE|TestAssembly.SimpleClass|Entering: TestAssembly.SimpleClass/get_Property1()", output);
+            StringAssert.Contains("TRACE|TestAssembly.SimpleClass|Exiting: TestAssembly.SimpleClass/get_Property1()", output);
         }
         
         [Test]
@@ -38,8 +38,8 @@ namespace PostSharp.Toolkit.Tests.NLog
             s.Property1 = "Test";
 
             string output = OutputString.ToString();
-            StringAssert.Contains("INFO|TestAssembly.SimpleClass|Entering: TestAssembly.SimpleClass/set_Property1(string value)", output);
-            StringAssert.Contains("INFO|TestAssembly.SimpleClass|Exiting: TestAssembly.SimpleClass/set_Property1(string value)", output);
+            StringAssert.Contains("TRACE|TestAssembly.SimpleClass|Entering: TestAssembly.SimpleClass/set_Property1(string value)", output);
+            StringAssert.Contains("TRACE|TestAssembly.SimpleClass|Exiting: TestAssembly.SimpleClass/set_Property1(string value)", output);
         }
     }
 }
