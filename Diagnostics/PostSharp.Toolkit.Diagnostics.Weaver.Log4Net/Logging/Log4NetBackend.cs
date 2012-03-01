@@ -8,7 +8,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
     {
         protected override ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module)
         {
-            LoggingContext log4NetContext = new Log4NetContext(module);
+            LoggingContext log4NetContext = new Log4NetContextBuilder(module).CreateContext();
 
             return new LoggingContextBackendWriter(log4NetContext);
         }

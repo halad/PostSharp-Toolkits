@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PostSharp.Sdk.Extensibility;
 using PostSharp.Sdk.Extensibility.Configuration;
 using PostSharp.Toolkit.Diagnostics.Weaver;
+using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console;
 using PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace;
 
@@ -18,7 +19,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
             {
                 Properties = new PropertyConfigurationCollection
                 {
-                    new PropertyConfiguration("LoggingBackend", "Console") { Overwrite = false },
+                    new PropertyConfiguration("LoggingBackend", "trace") { Overwrite = false },
                 },
                 TaskTypes = new TaskTypeConfigurationCollection
                 {
@@ -33,8 +34,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
                 },
                 Services = new ServiceConfigurationCollection
                 {
-                    new ServiceConfiguration(project => new ConsoleBackendProvider()),
-                    new ServiceConfiguration(project => new TraceBackendProvider())
+                    new ServiceConfiguration(project => new DiagnosticsBackendProvider()),
                 },
                 TaskFactories = new Dictionary<string, CreateTaskDelegate>
                 {

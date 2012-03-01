@@ -6,19 +6,17 @@ using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 {
-    internal sealed class NLogContext : LoggingContext
+    internal sealed class NLogContextBuilder : LoggingContextBuilder
     {
         private readonly Predicate<MethodDefDeclaration> messageOverloadPredicate;
 
-        public NLogContext(ModuleDeclaration module)
+        public NLogContextBuilder(ModuleDeclaration module)
             : base(module, module.FindType(typeof(Logger)))
         {
             // matches Logger.Foo(string)
             this.messageOverloadPredicate = 
                 method => method.Parameters.Count == 1 &&
                           IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String);
-
-            InitializeContext();
         }
 
         protected override IMethod GetInitializerMethod()

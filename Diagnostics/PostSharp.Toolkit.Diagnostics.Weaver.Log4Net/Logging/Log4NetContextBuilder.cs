@@ -6,12 +6,12 @@ using log4net;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 {
-    internal sealed class Log4NetContext : LoggingContext
+    internal sealed class Log4NetContextBuilder : LoggingContextBuilder
     {
         private readonly Predicate<MethodDefDeclaration> messageOverloadPredicate;
         private readonly Predicate<MethodDefDeclaration> exceptionOverloadPredicate;
 
-        public Log4NetContext(ModuleDeclaration module)
+        public Log4NetContextBuilder(ModuleDeclaration module)
             : base(module, module.FindType(typeof(ILog)))
         {
             // matches ILog.Foo(object) overload
@@ -26,8 +26,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
                 method => method.Parameters.Count == 2 &&
                           IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.Object) &&
                           method.Parameters[1].ParameterType.Equals(exceptionType);
-
-            InitializeContext();
         }
 
         protected override IMethod GetInitializerMethod()

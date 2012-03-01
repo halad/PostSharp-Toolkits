@@ -54,7 +54,7 @@
     <Compile Include="Log4NetProjectConfiguration.cs" />
     <Compile Include="Logging\Log4NetBackend.cs" />
     <Compile Include="Logging\Log4NetBackendProvider.cs" />
-    <Compile Include="Logging\Log4NetContext.cs" />
+    <Compile Include="Logging\Log4NetContextBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
