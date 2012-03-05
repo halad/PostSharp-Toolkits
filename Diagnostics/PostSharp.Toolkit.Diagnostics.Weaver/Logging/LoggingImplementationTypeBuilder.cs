@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeWeaver;
@@ -7,8 +8,9 @@ using PostSharp.Sdk.Utilities;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
-    public sealed class LoggingContextContainingTypeBuilder
+    public sealed class LoggingImplementationTypeBuilder
     {
+        Dictionary<string,FieldDefDeclaration> categoryFields = new Dictionary<string, FieldDefDeclaration>();
         private readonly ModuleDeclaration module;
         private readonly TypeDefDeclaration containingType;
         private readonly WeavingHelper weavingHelper;
@@ -17,7 +19,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         private InstructionSequence returnSequence;
         private InstructionBlock constructorBlock;
 
-        public LoggingContextContainingTypeBuilder(ModuleDeclaration module)
+        public LoggingImplementationTypeBuilder(ModuleDeclaration module)
         {
             this.module = module;
             this.weavingHelper = new WeavingHelper(module);
@@ -27,7 +29,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         private TypeDefDeclaration CreateContainingType()
         {
             string uniqueName = this.module.Types.GetUniqueName(
-                DebuggerSpecialNames.GetDeclarationSpecialName("LoggingContext{0}"));
+                DebuggerSpecialNames.GetDeclarationSpecialName("LoggingImplementationDetails{0}"));
 
             TypeDefDeclaration logCategoriesType = new TypeDefDeclaration
             {
@@ -65,15 +67,16 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             return logCategoriesType;
         }
 
-        public FieldDefDeclaration CreateLoggerField(string category, LoggingContext loggingContext)
+        public FieldDefDeclaration CreateLoggerField(string category, ITypeSignature fieldType, Action<InstructionWriter> initializeFieldAction )
         {
+
             string fieldName = string.Format("l{0}", this.containingType.Fields.Count + 1);
 
             FieldDefDeclaration loggerFieldDef = new FieldDefDeclaration
             {
                 Name = fieldName,
                 Attributes = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.InitOnly,
-                FieldType = loggingContext.LoggerType
+                FieldType = fieldType
             };
             this.containingType.Fields.Add(loggerFieldDef);
 
@@ -82,8 +85,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                                                                                         this.returnSequence);
 
             this.writer.AttachInstructionSequence(sequence);
-            this.writer.EmitInstructionString(OpCodeNumber.Ldstr, category);
-            this.writer.EmitInstructionMethod(OpCodeNumber.Call, loggingContext.InitializerMethod);
+           initializeFieldAction(writer);
             this.writer.EmitInstructionField(OpCodeNumber.Stsfld, loggerFieldDef);
             this.writer.DetachInstructionSequence();
 

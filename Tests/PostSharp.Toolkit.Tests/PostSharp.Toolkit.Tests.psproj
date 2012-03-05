@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!-- Default project used when PostSharp is detected according to project references. -->
 <Project xmlns="http://schemas.postsharp.org/1.0/configuration" ReferenceDirectory="{$ReferenceDirectory}">
-  
+
+  <Property Name="LoggingBackend" Value="console" />
+
   <Using File="default"/>
   <Using File="..\..\Build\bin\{$Configuration}\PostSharp.Toolkit.Diagnostics.Weaver.dll"/>
 

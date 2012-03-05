@@ -14,5 +14,10 @@ namespace TestAssembly
         {
             throw new InvalidOperationException();
         }
+
+        public void MethodThrowsException()
+        {
+            throw new Exception("This is an exception");
+        }
     }
 }

@@ -47,6 +47,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ILogAspect.cs" />
+    <Compile Include="LogAspectConfiguration.cs" />
     <Compile Include="LogAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

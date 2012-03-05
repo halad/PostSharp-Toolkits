@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using TestAssembly;
+using log4net;
 using log4net.Config;
 
 namespace PostSharp.Toolkit.Tests.Log4Net
@@ -45,6 +46,12 @@ namespace PostSharp.Toolkit.Tests.Log4Net
             string output = OutputString.ToString();
             StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Entering: TestAssembly.SimpleClass/set_Property1(string value)", output);
             StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Exiting: TestAssembly.SimpleClass/set_Property1(string value)", output);
+        }
+
+        [Test]
+        public void UnderTest_Scenario_ExpectedResult()
+        {
+            
         }
     }
 }

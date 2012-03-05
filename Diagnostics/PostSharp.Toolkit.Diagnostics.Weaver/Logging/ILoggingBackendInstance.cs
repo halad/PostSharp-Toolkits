@@ -5,7 +5,8 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     public interface ILoggingBackendInstance
     {
-        void EmitWrite(InstructionWriter instructionWriter, string message, LogLevel logLevel);
-        void EmitWriteException(InstructionWriter instructionWriter, string message, Exception exception, LogLevel logLevel);
+        ILoggingCategoryBuilder GetCategoryBuilder(string categoryName);
+        //void EmitWrite(InstructionWriter writer, InstructionBlock block, ILoggingCategoryBuilder category, string message, int argumentsCount, LogLevel logLevel, Action<InstructionWriter> getExceptionAction, Action<int,InstructionWriter> loadArgumentAction );
+        //void EmitWriteException(InstructionWriter writer, InstructionBlock block, string category, string message, ITypeSignature exceptionType, LogLevel logLevel);
     }
 }

@@ -7,9 +7,9 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
     {
         protected override ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module)
         {
-            LoggingContext traceContext = new TraceContextBuilder(module).CreateContext();
+            LoggingBackendMethods traceBackendMethods = new TraceMethodsBuilder(module).CreateContext();
 
-            return new TraceBackendWriter(traceContext);
+            return new TraceBackendWriter(traceBackendMethods);
         }
     }
 }

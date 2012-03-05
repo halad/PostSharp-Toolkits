@@ -1,4 +1,5 @@
 ﻿using System;
+using PostSharp.Aspects;
 using PostSharp.Aspects.Configuration;
 using PostSharp.Extensibility;
 using PostSharp.Sdk.AspectWeaver;
@@ -8,7 +9,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     public sealed class LoggingAspectWeaver : MethodLevelAspectWeaver
     {
-        private static readonly AspectConfigurationAttribute defaultConfiguration = new MethodInterceptionAspectConfigurationAttribute();
+        private static readonly LogAspectConfigurationAttribute defaultConfiguration = new LogAspectConfigurationAttribute() { Foo = 54534 };
         private LoggingAspectTransformation transformation;
 
         private InstrumentationPlugIn instrumentationPlugIn;
@@ -28,6 +29,8 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             this.transformation = new LoggingAspectTransformation(this, this.instrumentationPlugIn.Backend);
 
             ApplyWaivedEffects(this.transformation);
+
+
         }
 
         protected override AspectWeaverInstance CreateAspectWeaverInstance(AspectInstanceInfo aspectInstanceInfo)
@@ -44,6 +47,11 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 
             public override void ProvideAspectTransformations(AspectWeaverTransformationAdder adder)
             {
+
+                // TODO skip parameters:
+                // GetSystemParameter from ParameterDeclaration
+                //(this.Aspect as ILogAspectBuildSemantics).ShouldIncludeParameterValue()
+
                 LoggingAspectTransformation transformation = ((LoggingAspectWeaver)AspectWeaver).transformation;
                 AspectWeaverTransformationInstance transformationInstance = transformation.CreateInstance(this);
 

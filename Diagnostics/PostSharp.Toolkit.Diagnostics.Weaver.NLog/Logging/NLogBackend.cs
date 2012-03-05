@@ -8,9 +8,9 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
     {
         protected override ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module)
         {
-            LoggingContext nlogContext = new NLogContextBuilder(module).CreateContext();
+            LoggingBackendMethods nlogBackendMethods = new NLogMethodsBuilder(module).CreateContext();
 
-            return new LoggingContextBackendWriter(nlogContext);
+            return new LoggingContextBackendWriter(nlogBackendMethods);
         }
     }
 }

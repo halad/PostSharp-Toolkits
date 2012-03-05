@@ -6,11 +6,11 @@ using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 {
-    internal sealed class NLogContextBuilder : LoggingContextBuilder
+    internal sealed class NLogMethodsBuilder : LoggingMethodsBuilder
     {
         private readonly Predicate<MethodDefDeclaration> messageOverloadPredicate;
 
-        public NLogContextBuilder(ModuleDeclaration module)
+        public NLogMethodsBuilder(ModuleDeclaration module)
             : base(module, module.FindType(typeof(Logger)))
         {
             // matches Logger.Foo(string)
@@ -74,31 +74,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
         protected override IMethod GetFatalExceptionMethod()
         {
             return FindMethod("FatalException");
-        }
-
-        protected override IMethod GetIsTraceEnabledMethod()
-        {
-            return FindMethod("get_IsDebugEnabled");
-        }
-
-        protected override IMethod GetIsInfoEnabledMethod()
-        {
-            return FindMethod("get_IsInfoEnabled");
-        }
-
-        protected override IMethod GetIsWarningEnabledMethod()
-        {
-            return FindMethod("get_IsWarnEnabled");
-        }
-
-        protected override IMethod GetIsErrorEnabledMethod()
-        {
-            return FindMethod("get_IsErrorEnabled");
-        }
-
-        protected override IMethod GetIsFatalEnabledMethod()
-        {
-            return FindMethod("get_IsFatalEnabled");
         }
     }
 }

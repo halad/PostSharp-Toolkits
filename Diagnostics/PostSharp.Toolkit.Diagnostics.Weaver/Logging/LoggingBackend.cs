@@ -1,6 +1,7 @@
 using System;
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
+using PostSharp.Sdk.Utilities;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
@@ -36,29 +37,52 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                 this.aspectWeaverInstance = aspectWeaverInstance;
             }
 
-            public void EmitWrite(InstructionWriter instructionWriter, string message, LogLevel logLevel)
-            {
-                this.EmitWriteException(instructionWriter, message, null, logLevel);
-            }
-
-            public void EmitWriteException(InstructionWriter instructionWriter, string message, Exception exception, LogLevel logLevel)
+            public void EmitWrite(InstructionWriter writer, InstructionBlock block, string category, string message, LogLevel logLevel)
             {
                 switch (logLevel)
                 {
                     case LogLevel.Trace:
-                        this.parent.BackendWriter.EmitTrace(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitTrace(writer, message);
                         break;
                     case LogLevel.Info:
-                        this.parent.BackendWriter.EmitInfo(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitInfo(writer, message);
                         break;
                     case LogLevel.Warning:
-                        this.parent.BackendWriter.EmitWarning(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitWarning(writer, message);
                         break;
                     case LogLevel.Error:
-                        this.parent.BackendWriter.EmitError(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitError(writer, message);
                         break;
                     case LogLevel.Fatal:
-                        this.parent.BackendWriter.EmitFatal(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitFatal(writer, message);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("logLevel");
+                }
+            }
+
+            public void EmitWriteException(InstructionWriter writer, InstructionBlock block, string category, string message, ITypeSignature exceptionType, LogLevel logLevel)
+            {
+                LocalVariableSymbol exceptionLocal = block.MethodBody.RootInstructionBlock.DefineLocalVariable(
+                exceptionType, DebuggerSpecialNames.GetVariableSpecialName("ex"));
+                writer.EmitInstructionLocalVariable(OpCodeNumber.Stloc, exceptionLocal);
+
+                switch (logLevel)
+                {
+                    case LogLevel.Trace:
+                        this.parent.BackendWriter.EmitTraceException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Info:
+                        this.parent.BackendWriter.EmitInfoException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Warning:
+                        this.parent.BackendWriter.EmitWarningException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Error:
+                        this.parent.BackendWriter.EmitErrorException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Fatal:
+                        this.parent.BackendWriter.EmitFatalException(writer, message, exceptionLocal);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException("logLevel");

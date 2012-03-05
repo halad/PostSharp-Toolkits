@@ -6,12 +6,12 @@ using log4net;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 {
-    internal sealed class Log4NetContextBuilder : LoggingContextBuilder
+    internal sealed class Log4NetMethodsBuilder : LoggingMethodsBuilder
     {
         private readonly Predicate<MethodDefDeclaration> messageOverloadPredicate;
         private readonly Predicate<MethodDefDeclaration> exceptionOverloadPredicate;
 
-        public Log4NetContextBuilder(ModuleDeclaration module)
+        public Log4NetMethodsBuilder(ModuleDeclaration module)
             : base(module, module.FindType(typeof(ILog)))
         {
             // matches ILog.Foo(object) overload
@@ -83,31 +83,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
         protected override IMethod GetFatalExceptionMethod()
         {
             return FindMethod("Fatal", this.exceptionOverloadPredicate);
-        }
-
-        protected override IMethod GetIsTraceEnabledMethod()
-        {
-            return FindMethod("get_IsDebugEnabled");
-        }
-
-        protected override IMethod GetIsInfoEnabledMethod()
-        {
-            return FindMethod("get_IsInfoEnabled");
-        }
-
-        protected override IMethod GetIsWarningEnabledMethod()
-        {
-            return FindMethod("get_IsWarnEnabled");
-        }
-
-        protected override IMethod GetIsErrorEnabledMethod()
-        {
-            return FindMethod("get_IsErrorEnabled");
-        }
-
-        protected override IMethod GetIsFatalEnabledMethod()
-        {
-            return FindMethod("get_IsFatalEnabled");
         }
     }
 }

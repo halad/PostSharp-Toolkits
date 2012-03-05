@@ -1,6 +1,8 @@
 using System;
+using System.Reflection;
 using PostSharp.Aspects;
 using PostSharp.Extensibility;
+using PostSharp.Aspects.Configuration;
 
 namespace PostSharp.Toolkit.Diagnostics
 {
@@ -13,7 +15,12 @@ namespace PostSharp.Toolkit.Diagnostics
     MulticastTargets.InstanceConstructor | MulticastTargets.StaticConstructor | MulticastTargets.Method,
       AllowMultiple = true)]
     [Metric("UsedFeatures", "Toolkit.Diagnostics.Logging")]
-    public sealed class LogAttribute : MethodLevelAspect, ILogAspect
+    //[AspectConfigurationAttributeType(typeof(LogAspectConfigurationAttribute))]
+    public class LogAttribute : MethodLevelAspect, ILogAspect, ILogAspectBuildSemantics
     {
+        public virtual bool ShouldIncludeParameterValue(ParameterInfo parameter)
+        {
+            return true;
+        }
     }
 }

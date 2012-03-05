@@ -3,7 +3,7 @@ using PostSharp.Sdk.CodeModel;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
-    public abstract class LoggingContextBuilder
+    public abstract class LoggingMethodsBuilder
     {
         private readonly ModuleDeclaration module;
         private readonly ITypeSignature loggerType;
@@ -13,15 +13,15 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             get { return this.module; }
         }
 
-        protected LoggingContextBuilder(ModuleDeclaration module, ITypeSignature loggerType)
+        protected LoggingMethodsBuilder(ModuleDeclaration module, ITypeSignature loggerType)
         {
             this.module = module;
             this.loggerType = loggerType;
         }
 
-        public LoggingContext CreateContext()
+        public LoggingBackendMethods CreateContext()
         {
-            return new LoggingContext(this.module, this.loggerType)
+            return new LoggingBackendMethods(this.module, this.loggerType)
             {
                 InitializerMethod = this.GetInitializerMethod(),
                 TraceMethod = this.GetTraceMethod(),
@@ -34,11 +34,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                 ErrorExceptionMethod = this.GetErrorExceptionMethod(),
                 FatalMethod = this.GetFatalMethod(),
                 FatalExceptionMethod = this.GetFatalExceptionMethod(),
-                IsTraceEnabledMethod = this.GetIsTraceEnabledMethod(),
-                IsInfoEnabledMethod = this.GetIsInfoEnabledMethod(),
-                IsWarningEnabledMethod = this.GetIsWarningEnabledMethod(),
-                IsErrorEnabledMethod = this.GetIsErrorEnabledMethod(),
-                IsFatalEnabledMethod = this.GetIsFatalEnabledMethod()
             };
         }
 
@@ -53,11 +48,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         protected abstract IMethod GetErrorExceptionMethod();
         protected abstract IMethod GetFatalMethod();
         protected abstract IMethod GetFatalExceptionMethod();
-        protected abstract IMethod GetIsTraceEnabledMethod();
-        protected abstract IMethod GetIsInfoEnabledMethod();
-        protected abstract IMethod GetIsWarningEnabledMethod();
-        protected abstract IMethod GetIsErrorEnabledMethod();
-        protected abstract IMethod GetIsFatalEnabledMethod();
 
         protected IMethod FindMethod(string methodName, Predicate<MethodDefDeclaration> predicate = null)
         {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
+using PostSharp.Sdk.Utilities;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
@@ -9,17 +10,17 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
     {
         private readonly Dictionary<object, FieldDefDeclaration> logFields = new Dictionary<object, FieldDefDeclaration>();
 
-        private LoggingContextContainingTypeBuilder typeBuilder;
+        private LoggingImplementationTypeBuilder typeBuilder;
 
         public override void Initialize(ModuleDeclaration module)
         {
             base.Initialize(module);
-            this.typeBuilder = new LoggingContextContainingTypeBuilder(module);
+            this.typeBuilder = new LoggingImplementationTypeBuilder(module);
         }
 
         public override ILoggingBackendInstance CreateInstance(AspectWeaverInstance aspectWeaverInstance)
         {
-            return new LoggerBasedBackendInstance(this, aspectWeaverInstance);
+            return new LoggerBasedBackendInstance(this);
         }
 
         public FieldDefDeclaration GetLoggerField(object category)
@@ -27,7 +28,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             FieldDefDeclaration loggerField;
             if (!this.logFields.TryGetValue(category, out loggerField))
             {
-                loggerField = this.typeBuilder.CreateLoggerField((string)category, BackendWriter.LoggingContext);
+                loggerField = this.typeBuilder.CreateLoggerField((string)category, BackendWriter.LoggingBackendMethods);
                 this.logFields[category] = loggerField;
             }
 
@@ -37,54 +38,68 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         private class LoggerBasedBackendInstance : ILoggingBackendInstance
         {
             private readonly LoggerBasedBackend parent;
-            private readonly AspectWeaverInstance aspectWeaverInstance;
 
-            public LoggerBasedBackendInstance(LoggerBasedBackend parent, AspectWeaverInstance aspectWeaverInstance)
+            public LoggerBasedBackendInstance(LoggerBasedBackend parent)
             {
                 this.parent = parent;
-                this.aspectWeaverInstance = aspectWeaverInstance;
             }
 
-            public void EmitWrite(InstructionWriter instructionWriter, string message, LogLevel logLevel)
+            public void EmitWrite(InstructionWriter writer, InstructionBlock block, string category, string message, LogLevel logLevel)
             {
-                this.EmitWriteException(instructionWriter, message, null, logLevel);
-            }
-
-            public void EmitWriteException(InstructionWriter instructionWriter, string message, Exception exception, LogLevel logLevel)
-            {
-                MethodDefDeclaration targetMethod = this.aspectWeaverInstance.TargetElement as MethodDefDeclaration;
-                if (targetMethod == null)
-                {
-                    return;
-                }
-
-                // TODO: nested types
-                string category = targetMethod.DeclaringType.Name;
-
                 FieldDefDeclaration loggerField = this.parent.GetLoggerField(category);
-                instructionWriter.EmitInstructionField(OpCodeNumber.Ldsfld, loggerField);
+                writer.EmitInstructionField(OpCodeNumber.Ldsfld, loggerField);
 
                 switch (logLevel)
                 {
                     case LogLevel.Trace:
-                        this.parent.BackendWriter.EmitTrace(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitTrace(writer, message);
                         break;
                     case LogLevel.Info:
-                        this.parent.BackendWriter.EmitInfo(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitInfo(writer, message);
                         break;
                     case LogLevel.Warning:
-                        this.parent.BackendWriter.EmitWarning(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitWarning(writer, message);
                         break;
                     case LogLevel.Error:
-                        this.parent.BackendWriter.EmitError(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitError(writer, message);
                         break;
                     case LogLevel.Fatal:
-                        this.parent.BackendWriter.EmitFatal(instructionWriter, message, exception);
+                        this.parent.BackendWriter.EmitFatal(writer, message);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException("logLevel");
                 }
-                
+            }
+
+            public void EmitWriteException(InstructionWriter writer, InstructionBlock block, string category, string message, ITypeSignature exceptionType, LogLevel logLevel)
+            {
+                LocalVariableSymbol exceptionLocal = block.MethodBody.RootInstructionBlock.DefineLocalVariable(
+                exceptionType, DebuggerSpecialNames.GetVariableSpecialName("ex"));
+                writer.EmitInstructionLocalVariable(OpCodeNumber.Stloc, exceptionLocal);
+
+                FieldDefDeclaration loggerField = this.parent.GetLoggerField(category);
+                writer.EmitInstructionField(OpCodeNumber.Ldsfld, loggerField);
+
+                switch (logLevel)
+                {
+                    case LogLevel.Trace:
+                        this.parent.BackendWriter.EmitTraceException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Info:
+                        this.parent.BackendWriter.EmitInfoException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Warning:
+                        this.parent.BackendWriter.EmitWarningException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Error:
+                        this.parent.BackendWriter.EmitErrorException(writer, message, exceptionLocal);
+                        break;
+                    case LogLevel.Fatal:
+                        this.parent.BackendWriter.EmitFatalException(writer, message, exceptionLocal);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("logLevel");
+                }
             }
         }
     }

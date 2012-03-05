@@ -49,5 +49,19 @@ namespace PostSharp.Toolkit.Tests
             string output = OutputString.ToString();
             StringAssert.DoesNotContain("Field1", output);
         }
+
+        [Test]
+        public void LoggingToolkit_OnException_PrintsException()
+        {
+            SimpleClass s = new SimpleClass();
+            try
+            {
+                s.MethodThrowsException();
+            }
+            catch { }
+
+            string output = OutputString.ToString();
+            StringAssert.Contains("System.Exception", output);
+        }
     }
 }

@@ -3,7 +3,7 @@ using PostSharp.Sdk.CodeModel;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
-    public sealed class LoggingContext
+    public sealed class LoggingBackendMethods
     {
         private readonly ModuleDeclaration module;
         private readonly ITypeSignature loggerType;
@@ -17,11 +17,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         public IMethod ErrorExceptionMethod { get; set; }
         public IMethod FatalMethod { get; set; }
         public IMethod FatalExceptionMethod { get; set; }
-        public IMethod IsTraceEnabledMethod { get; set; }
-        public IMethod IsInfoEnabledMethod { get; set; }
-        public IMethod IsWarningEnabledMethod { get; set; }
-        public IMethod IsErrorEnabledMethod { get; set; }
-        public IMethod IsFatalEnabledMethod { get; set; }
         public IMethod InitializerMethod { get; set; }
 
         public ITypeSignature LoggerType
@@ -29,12 +24,12 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             get { return this.loggerType; }
         }
 
-        protected ModuleDeclaration Module
+        public ModuleDeclaration Module
         {
             get { return this.module; }
         }
 
-        internal LoggingContext(ModuleDeclaration module, ITypeSignature loggerType)
+        internal LoggingBackendMethods(ModuleDeclaration module, ITypeSignature loggerType)
         {
             this.module = module;
             this.loggerType = loggerType;            

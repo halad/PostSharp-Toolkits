@@ -57,5 +57,20 @@ namespace PostSharp.Toolkit.Tests.Trace
             string output = OutputString.ToString();
             StringAssert.DoesNotContain("Field1", output);
         }
+
+        [Test]
+        public void Trace_OnException_PrintsException()
+        {
+            SimpleClass s = new SimpleClass();
+            try
+            {
+                s.MethodThrowsException();
+            }
+            catch { }
+
+            string output = OutputString.ToString();
+            StringAssert.Contains("System.Exception: This is an exception", output);
+        }
+
     }
 }
