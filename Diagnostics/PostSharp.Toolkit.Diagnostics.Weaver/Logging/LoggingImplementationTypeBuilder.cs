@@ -10,7 +10,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     public sealed class LoggingImplementationTypeBuilder
     {
-        Dictionary<string,FieldDefDeclaration> categoryFields = new Dictionary<string, FieldDefDeclaration>();
+        private readonly Dictionary<string,FieldDefDeclaration> categoryFields = new Dictionary<string, FieldDefDeclaration>();
         private readonly ModuleDeclaration module;
         private readonly TypeDefDeclaration containingType;
         private readonly WeavingHelper weavingHelper;
@@ -24,6 +24,18 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             this.module = module;
             this.weavingHelper = new WeavingHelper(module);
             this.containingType = this.CreateContainingType();
+        }
+
+        public FieldDefDeclaration GetCategoryField(string category, ITypeSignature fieldType, Action<InstructionWriter> initializeFieldAction )
+        {
+            FieldDefDeclaration categoryField;
+            if (!this.categoryFields.TryGetValue(category, out categoryField))
+            {
+                categoryField = this.CreateCategoryField(fieldType, initializeFieldAction);
+                this.categoryFields[category] = categoryField;
+            }
+
+            return categoryField;
         }
 
         private TypeDefDeclaration CreateContainingType()
@@ -67,9 +79,8 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             return logCategoriesType;
         }
 
-        public FieldDefDeclaration CreateLoggerField(string category, ITypeSignature fieldType, Action<InstructionWriter> initializeFieldAction )
+        private FieldDefDeclaration CreateCategoryField(ITypeSignature fieldType, Action<InstructionWriter> initializeFieldAction)
         {
-
             string fieldName = string.Format("l{0}", this.containingType.Fields.Count + 1);
 
             FieldDefDeclaration loggerFieldDef = new FieldDefDeclaration
@@ -85,7 +96,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                                                                                         this.returnSequence);
 
             this.writer.AttachInstructionSequence(sequence);
-           initializeFieldAction(writer);
+            initializeFieldAction(this.writer);
             this.writer.EmitInstructionField(OpCodeNumber.Stsfld, loggerFieldDef);
             this.writer.DetachInstructionSequence();
 

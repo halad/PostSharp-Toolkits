@@ -4,6 +4,7 @@ using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.AspectWeaver.Transformations;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.Collections;
+using PostSharp.Sdk.Utilities;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
@@ -67,16 +68,32 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                 {
                     ITypeSignature exceptionSignature = this.transformationInstance.AspectWeaver.Module.Cache.GetType(typeof(Exception));
 
-
                     Implement(true, false, true, new[] { exceptionSignature });
                     this.Context.AddRedirection(this.Redirection);
                 }
 
                 protected override void ImplementOnException(InstructionBlock block, ITypeSignature exceptionType, InstructionWriter writer)
                 {
-                    backendInstance.GetCategoryBuilder("xboo").EmitWrite(writer, block, "Got an exception( {0} )", 1, LogLevel.Warning, 
-                        null /* ldloc */,  (i, instructionWriter) => writer.EmitInstructionInt16(OpCodeNumber.Ldarg, i) );
-                    this.EmitExceptionMessage(block, writer, exceptionType, "An exception occurred");
+                    MethodDefDeclaration targetMethod = this.transformationInstance.AspectWeaverInstance.TargetElement as MethodDefDeclaration;
+                    if (targetMethod == null)
+                    {
+                        return;
+                    }
+
+                    // TODO: nested types
+                    string category = targetMethod.DeclaringType.Name;
+                    ILoggingCategoryBuilder builder = this.backendInstance.GetCategoryBuilder(category);
+                    InstructionSequence sequence = block.AddInstructionSequence(null, NodePosition.After, null);
+                    writer.AttachInstructionSequence(sequence);
+
+                    LocalVariableSymbol exceptionLocal = block.MethodBody.RootInstructionBlock.DefineLocalVariable(
+                        exceptionType, DebuggerSpecialNames.GetVariableSpecialName("ex"));
+                    writer.EmitInstructionLocalVariable(OpCodeNumber.Stloc, exceptionLocal);
+
+                    builder.EmitWrite(writer, block, "An exception occurred:\n{0}", 1, LogLevel.Warning,
+                                      writer1 => writer1.EmitInstructionLocalVariable(OpCodeNumber.Ldloc, exceptionLocal),
+                                      null);
+                    writer.DetachInstructionSequence();
                 }
 
                 protected override void ImplementOnExit(InstructionBlock block, InstructionWriter writer)
@@ -93,7 +110,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     this.EmitMessage(block, writer, "Entering: " + this.codeElementName);
                 }
 
-                private void EmitMessage(InstructionBlock block, InstructionWriter writer, string message)
+                private void EmitMessage(InstructionBlock block, InstructionWriter writer, string messageFormattingString)
                 {
                     MethodDefDeclaration targetMethod = this.transformationInstance.AspectWeaverInstance.TargetElement as MethodDefDeclaration;
                     if (targetMethod == null)
@@ -103,26 +120,11 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 
                     // TODO: nested types
                     string category = targetMethod.DeclaringType.Name;
-
-                    InstructionSequence sequence = block.AddInstructionSequence(null, NodePosition.After, null);
-
-                    writer.AttachInstructionSequence(sequence);
-                    this.backendInstance.EmitWrite(writer, block, category, message, LogLevel.Trace);
-                    writer.DetachInstructionSequence();
-                }
-
-                private void EmitExceptionMessage(InstructionBlock block, InstructionWriter writer, ITypeSignature exceptionType, string message)
-                {
-                    MethodDefDeclaration targetMethod = (MethodDefDeclaration)this.transformationInstance.AspectWeaverInstance.TargetElement;
-
-                    // TODO: nested types
-                    string category = targetMethod.DeclaringType.Name;
+                    ILoggingCategoryBuilder builder = this.backendInstance.GetCategoryBuilder(category);
 
                     InstructionSequence sequence = block.AddInstructionSequence(null, NodePosition.After, null);
                     writer.AttachInstructionSequence(sequence);
-
-                    this.backendInstance.EmitWriteException(writer, block, category, message, exceptionType, LogLevel.Info);
-                    writer.EmitInstruction(OpCodeNumber.Rethrow);
+                    builder.EmitWrite(writer, block, messageFormattingString, 0, LogLevel.Trace, null, null);
                     writer.DetachInstructionSequence();
                 }
             }

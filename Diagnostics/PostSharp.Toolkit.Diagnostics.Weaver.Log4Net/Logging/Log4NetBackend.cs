@@ -1,16 +1,28 @@
 ﻿using System;
+using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 {
-    internal sealed class Log4NetBackend : LoggerBasedBackend
+    internal sealed class Log4NetBackend : ILoggingBackend
     {
-        protected override ILoggingBackendWriter CreateBackendWriter(ModuleDeclaration module)
+        public void Initialize(ModuleDeclaration module)
         {
-            LoggingBackendMethods log4NetBackendMethods = new Log4NetMethodsBuilder(module).CreateContext();
+            
+        }
 
-            return new LoggingContextBackendWriter(log4NetBackendMethods);
+        public ILoggingBackendInstance CreateInstance(AspectWeaverInstance aspectWeaverInstance)
+        {
+            return new Log4NetBackendInstance();
+        }
+
+        private class Log4NetBackendInstance : ILoggingBackendInstance
+        {
+            public ILoggingCategoryBuilder GetCategoryBuilder(string categoryName)
+            {
+                return null;
+            }
         }
     }
 }

@@ -61,8 +61,6 @@
     <Compile Include="Logging\LoggingContextBackendWriter.cs" />
     <Compile Include="Logging\LoggingMethodsBuilder.cs" />
     <Compile Include="Logging\LogLevel.cs" />
-    <Compile Include="Logging\LoggerBasedBackend.cs" />
-    <Compile Include="Logging\LoggingBackend.cs" />
     <Compile Include="Logging\LoggingImplementationTypeBuilder.cs" />
     <Compile Include="Logging\ILoggingBackend.cs" />
     <Compile Include="Logging\ILoggingBackendInstance.cs" />
@@ -70,7 +68,6 @@
     <Compile Include="Logging\Trace\TraceBackend.cs" />
     <Compile Include="Logging\Trace\TraceBackendWriter.cs" />
     <Compile Include="Logging\Trace\TraceMethodsBuilder.cs" />
-    <Compile Include="Logging\Console\ConsoleWriteLineWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logging\LoggingAspectTransformation.cs" />
     <Compile Include="Logging\LoggingAspectWeaver.cs" />
