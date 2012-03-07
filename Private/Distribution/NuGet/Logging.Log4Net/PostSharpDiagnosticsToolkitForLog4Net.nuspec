@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>PostSharpDiagnosticsToolkitForLog4Net</id>
+    <id>PostSharp-Diagnostics-Toolkit-Log4Net</id>
     <version>_VERSION_</version>
     <title>PostSharp Diagnostics Toolkit for Log4Net</title>
     <authors>SharpCrafters s.r.o.</authors>
@@ -18,7 +18,7 @@
     <tags>postsharp sharcrafters aop aspect monitoring instrumentation log logging tracing nlog log4net elmah toolkit toolkits</tags>
     <dependencies>
       <dependency id="PostSharp" version="2.1.6.4" />
-      <dependency id="PostSharpDiagnosticsToolkit" version="_VERSION_" />
+      <dependency id="PostSharp-Diagnostics-Toolkit" version="_VERSION_" />
       <dependency id="log4net" version="2.0.0" />
     </dependencies>
   </metadata>
