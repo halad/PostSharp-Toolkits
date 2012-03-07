@@ -21,11 +21,15 @@ The PostSharp Diagnostics Toolkit includes pluggable support for the leading log
 
 The **PostSharp Diagnostics Toolkit** is available on NuGet:
 
-![PostSharp Diagnostics Toolkit](http://i.imgur.com/ZxhAo.png)
+![PostSharp Diagnostics Toolkit](http://i.imgur.com/NSWXm.png)
 
 NLog support is available via the **PostSharp Diagnostics Toolkit for NLog** package:
 
-![PostSharp Diagnostics Toolkit for NLog](http://i.imgur.com/NtqoX.png)
+![PostSharp Diagnostics Toolkit for NLog](http://i.imgur.com/cfNDL.png)
+
+Log4Net support is available via the **PostSharp Diagnostics Toolkit for Log4Net** package:
+
+![PostSharp Diagnostics Toolkit for Log4Net](http://i.imgur.com/Oq9jP.png)
 
 ### Getting started with PostSharp Diagnostics Toolkit for NLog
 
