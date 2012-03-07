@@ -9,7 +9,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 {
     public sealed class LoggingAspectWeaver : MethodLevelAspectWeaver
     {
-        private static readonly LogAspectConfigurationAttribute defaultConfiguration = new LogAspectConfigurationAttribute() { Foo = 54534 };
+        private static readonly AspectConfigurationAttribute defaultConfiguration = new MethodInterceptionAspectConfigurationAttribute();
         private LoggingAspectTransformation transformation;
 
         private InstrumentationPlugIn instrumentationPlugIn;

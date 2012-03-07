@@ -1,8 +1,6 @@
 using System;
-using System.Reflection;
 using PostSharp.Aspects;
 using PostSharp.Extensibility;
-using PostSharp.Aspects.Configuration;
 
 namespace PostSharp.Toolkit.Diagnostics
 {
@@ -18,9 +16,5 @@ namespace PostSharp.Toolkit.Diagnostics
     //[AspectConfigurationAttributeType(typeof(LogAspectConfigurationAttribute))]
     public class LogAttribute : MethodLevelAspect, ILogAspect, ILogAspectBuildSemantics
     {
-        public virtual bool ShouldIncludeParameterValue(ParameterInfo parameter)
-        {
-            return true;
-        }
     }
 }

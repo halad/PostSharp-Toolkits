@@ -37,9 +37,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
             private readonly ModuleDeclaration module;
 
             private readonly IMethod writeLineString;
-            private readonly IMethod writeLineObject;
-            private readonly IMethod writeLineStringCategory;
-            private readonly IMethod writeLineObjectCategory;
 
             public TraceCategoryBuilder(ModuleDeclaration module)
             {
@@ -49,23 +46,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
                     module.Cache.GetType(typeof(System.Diagnostics.Trace)), "WriteLine",
                     method => method.Parameters.Count == 1 &&
                               IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
-
-                this.writeLineObject = module.FindMethod(
-                    module.Cache.GetType(typeof(System.Diagnostics.Trace)), "WriteLine",
-                    method => method.Parameters.Count == 1 &&
-                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.Object));
-
-                this.writeLineStringCategory = module.FindMethod(
-                    module.Cache.GetType(typeof(System.Diagnostics.Trace)), "WriteLine",
-                    method => method.Parameters.Count == 2 &&
-                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
-                              IntrinsicTypeSignature.Is(method.Parameters[1].ParameterType, IntrinsicType.String));
-
-                this.writeLineObjectCategory = module.FindMethod(
-                    module.Cache.GetType(typeof(System.Diagnostics.Trace)), "WriteLine",
-                    method => method.Parameters.Count == 2 &&
-                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.Object) &&
-                              IntrinsicTypeSignature.Is(method.Parameters[1].ParameterType, IntrinsicType.String));
             }
 
             public bool SupportsIsEnabled
@@ -83,11 +63,16 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
             {
                 bool createArgsArray = argumentsCount > 3;
 
-                writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
-
                 if (getExceptionAction != null)
                 {
                     getExceptionAction(writer);
+
+                    writer.EmitInstructionMethod(OpCodeNumber.Callvirt, this.module.FindMethod(
+                        this.module.Cache.GetType(typeof(object)), "ToString"));
+                }
+                else
+                {
+                    writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
                 }
 
                 if (createArgsArray)
@@ -115,30 +100,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
                     }
                 }
 
-                if (argumentsCount > 0)
-                {
-                    IMethod stringFormatMethod;
-
-                    if (createArgsArray)
-                    {
-                        stringFormatMethod = this.module.FindMethod(
-                            this.module.FindType(typeof(string)), "Format",
-                            method => method.Parameters.Count > 1 &&
-                                      IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
-                                      method.Parameters[0].Name == "format" &&
-                                      method.Parameters[1].ParameterType.BelongsToClassification(TypeClassifications.Array));
-                    }
-                    else
-                    {
-                        stringFormatMethod = this.module.FindMethod(
-                            this.module.FindType(typeof(string)), "Format",
-                            method => method.Parameters.Count > 1 &&
-                                      IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
-                                      method.Parameters[0].Name == "format" &&
-                                      method.Parameters.Count - 1 == argumentsCount);
-                    } 
-                    writer.EmitInstructionMethod(OpCodeNumber.Call, stringFormatMethod);
-                }
                 writer.EmitInstructionMethod(OpCodeNumber.Call, writeLineString);
             }
         }

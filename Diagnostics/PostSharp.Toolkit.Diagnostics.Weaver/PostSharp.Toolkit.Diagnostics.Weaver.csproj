@@ -54,23 +54,17 @@
     <Compile Include="InstrumentationProjectConfiguration.cs" />
     <Compile Include="Logging\Console\ConsoleBackend.cs" />
     <Compile Include="Logging\DiagnosticsBackendProvider.cs" />
-    <Compile Include="Logging\ILoggingBackendWriter.cs" />
     <Compile Include="Logging\ILoggingCategoryBuilder.cs" />
-    <Compile Include="Logging\LoggingBackendWriter.cs" />
-    <Compile Include="Logging\LoggingBackendMethods.cs" />
-    <Compile Include="Logging\LoggingContextBackendWriter.cs" />
-    <Compile Include="Logging\LoggingMethodsBuilder.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\LoggingImplementationTypeBuilder.cs" />
     <Compile Include="Logging\ILoggingBackend.cs" />
     <Compile Include="Logging\ILoggingBackendInstance.cs" />
     <Compile Include="Logging\ILoggingBackendProvider.cs" />
     <Compile Include="Logging\Trace\TraceBackend.cs" />
-    <Compile Include="Logging\Trace\TraceBackendWriter.cs" />
-    <Compile Include="Logging\Trace\TraceMethodsBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logging\LoggingAspectTransformation.cs" />
     <Compile Include="Logging\LoggingAspectWeaver.cs" />
+    <Compile Include="StringFormatHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PostSharp.Toolkit.Diagnostics\PostSharp.Toolkit.Diagnostics.csproj">

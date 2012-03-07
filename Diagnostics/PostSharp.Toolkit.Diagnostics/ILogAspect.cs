@@ -1,4 +1,3 @@
-using System.Reflection;
 using PostSharp.Aspects;
 using PostSharp.Extensibility;
 
@@ -11,6 +10,5 @@ namespace PostSharp.Toolkit.Diagnostics
 
     public interface ILogAspectBuildSemantics : IAspectBuildSemantics
     {
-        bool ShouldIncludeParameterValue(ParameterInfo parameter);
     }
 }

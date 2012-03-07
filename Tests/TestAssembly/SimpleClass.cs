@@ -17,6 +17,7 @@ namespace TestAssembly
 
         public void MethodThrowsException()
         {
+            
             throw new Exception("This is an exception");
         }
     }

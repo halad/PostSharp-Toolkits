@@ -42,7 +42,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console
             private readonly IMethod writeLineFormat4;
             private readonly IMethod writeLineFormatArray;
 
-
             public ConsoleCategoryBuilder(ModuleDeclaration module)
             {
                 this.module = module;

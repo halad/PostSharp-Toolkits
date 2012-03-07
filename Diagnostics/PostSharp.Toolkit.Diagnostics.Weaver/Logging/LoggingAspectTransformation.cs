@@ -93,6 +93,8 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     builder.EmitWrite(writer, block, "An exception occurred:\n{0}", 1, LogLevel.Warning,
                                       writer1 => writer1.EmitInstructionLocalVariable(OpCodeNumber.Ldloc, exceptionLocal),
                                       null);
+
+                    writer.EmitInstruction(OpCodeNumber.Rethrow);
                     writer.DetachInstructionSequence();
                 }
 
@@ -124,6 +126,14 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 
                     InstructionSequence sequence = block.AddInstructionSequence(null, NodePosition.After, null);
                     writer.AttachInstructionSequence(sequence);
+                    
+                    if (builder.SupportsIsEnabled)
+                    {
+                        builder.EmitGetIsEnabled(writer, LogLevel.Trace);
+                        InstructionSequence branchSequence = block.AddInstructionSequence(null, NodePosition.After, sequence);
+                        writer.EmitBranchingInstruction(OpCodeNumber.Brfalse_S, branchSequence);
+                    }
+
                     builder.EmitWrite(writer, block, messageFormattingString, 0, LogLevel.Trace, null, null);
                     writer.DetachInstructionSequence();
                 }
