@@ -5,7 +5,7 @@
     <PostSharpToolkitsDirectory Condition="'$(PostSharpToolkitsDirectory)'==''">..\..</PostSharpToolkitsDirectory>
     <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
     <MajorVersion>2.1</MajorVersion>
-		<MinorVersion>6</MinorVersion>
+		<MinorVersion>1</MinorVersion>
   </PropertyGroup>
   
   <Import Project="..\Dependencies\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
