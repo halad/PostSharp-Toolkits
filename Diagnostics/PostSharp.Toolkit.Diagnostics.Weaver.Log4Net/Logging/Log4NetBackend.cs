@@ -10,6 +10,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
     internal sealed class Log4NetBackend : ILoggingBackend
     {
         private LoggingImplementationTypeBuilder loggingImplementation;
+        private StringFormatWriter formatWriter;
 
         private IMethod writeDebugMethod;
         private IMethod writeDebugExceptionMethod;
@@ -33,6 +34,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
         public void Initialize(ModuleDeclaration module)
         {
             this.loggingImplementation = new LoggingImplementationTypeBuilder(module);
+            this.formatWriter = new StringFormatWriter(module);
 
             this.loggerType = module.FindType(typeof(ILog));
             this.categoryInitializerMethod = module.FindMethod(module.FindType(typeof(LogManager)), "GetLogger",
@@ -59,16 +61,18 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 
         public ILoggingBackendInstance CreateInstance(AspectWeaverInstance aspectWeaverInstance)
         {
-            return new Log4NetBackendInstance(this);
+            return new Log4NetBackendInstance(this, aspectWeaverInstance.AspectType.Module);
         }
 
         private class Log4NetBackendInstance : ILoggingBackendInstance
         {
             private readonly Log4NetBackend parent;
+            private readonly ModuleDeclaration module;
 
-            public Log4NetBackendInstance(Log4NetBackend parent)
+            public Log4NetBackendInstance(Log4NetBackend parent, ModuleDeclaration module)
             {
                 this.parent = parent;
+                this.module = module;
             }
 
             public ILoggingCategoryBuilder GetCategoryBuilder(string categoryName)
@@ -163,7 +167,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
 
                 if (argumentsCount > 0)
                 {
-                    StringFormatHelper.WriteFormatArguments(writer, argumentsCount);
+                    this.parent.formatWriter.EmitFormatArguments(writer, messageFormattingString, argumentsCount);
                 }
 
                 writer.EmitInstructionMethod(OpCodeNumber.Callvirt, method);

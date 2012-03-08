@@ -88,11 +88,10 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 
                     LocalVariableSymbol exceptionLocal = block.MethodBody.RootInstructionBlock.DefineLocalVariable(
                         exceptionType, DebuggerSpecialNames.GetVariableSpecialName("ex"));
-                    writer.EmitInstructionLocalVariable(OpCodeNumber.Stloc, exceptionLocal);
 
                     builder.EmitWrite(writer, block, "An exception occurred:\n{0}", 1, LogLevel.Warning,
-                                      writer1 => writer1.EmitInstructionLocalVariable(OpCodeNumber.Ldloc, exceptionLocal),
-                                      null);
+                                      w => w.EmitInstructionLocalVariable(OpCodeNumber.Stloc, exceptionLocal),
+                                      (i, w) => w.EmitInstructionLocalVariable(OpCodeNumber.Ldloc, exceptionLocal));
 
                     writer.EmitInstruction(OpCodeNumber.Rethrow);
                     writer.DetachInstructionSequence();

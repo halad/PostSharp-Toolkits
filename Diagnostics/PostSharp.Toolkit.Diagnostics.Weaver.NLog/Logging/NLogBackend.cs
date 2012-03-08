@@ -11,6 +11,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
     internal sealed class NLogBackend : ILoggingBackend
     {
         private LoggingImplementationTypeBuilder loggingImplementation;
+        private StringFormatWriter formatWriter;
 
         private IMethod writeDebugMethod;
         private IMethod writeDebugExceptionMethod;
@@ -34,6 +35,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
         public void Initialize(ModuleDeclaration module)
         {
             this.loggingImplementation = new LoggingImplementationTypeBuilder(module);
+            this.formatWriter = new StringFormatWriter(module);
 
             this.loggerType = module.FindType(typeof(Logger));
             Predicate<MethodDefDeclaration> singleMessagePredicate = 
@@ -89,17 +91,11 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
             {
                 this.parent = parent;
 
-                this.loggerField = this.parent.loggingImplementation.GetCategoryField(categoryName,
-                                                                                      this.parent.loggerType, writer =>
-                                                                                      {
-                                                                                          writer.EmitInstructionString(
-                                                                                              OpCodeNumber.Ldstr,
-                                                                                              categoryName);
-                                                                                          writer.EmitInstructionMethod(
-                                                                                              OpCodeNumber.Call,
-                                                                                              this.parent.
-                                                                                                  categoryInitializerMethod);
-                                                                                      });
+                this.loggerField = this.parent.loggingImplementation.GetCategoryField(categoryName, this.parent.loggerType, writer =>
+                {
+                    writer.EmitInstructionString(OpCodeNumber.Ldstr, categoryName);
+                    writer.EmitInstructionMethod(OpCodeNumber.Call, this.parent.categoryInitializerMethod);
+                });
             }
 
             public bool SupportsIsEnabled
@@ -171,11 +167,10 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 
                 if (argumentsCount > 0)
                 {
-                    StringFormatHelper.WriteFormatArguments(writer, argumentsCount);
+                    this.parent.formatWriter.EmitFormatArguments(writer, messageFormattingString, argumentsCount);
                 }
 
                 writer.EmitInstructionMethod(OpCodeNumber.Callvirt, method);
-                ;
             }
         }
     }

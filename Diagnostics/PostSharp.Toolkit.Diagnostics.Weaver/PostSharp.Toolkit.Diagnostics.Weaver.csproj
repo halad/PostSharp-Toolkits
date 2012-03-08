@@ -64,7 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logging\LoggingAspectTransformation.cs" />
     <Compile Include="Logging\LoggingAspectWeaver.cs" />
-    <Compile Include="StringFormatHelper.cs" />
+    <Compile Include="StringFormatWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PostSharp.Toolkit.Diagnostics\PostSharp.Toolkit.Diagnostics.csproj">

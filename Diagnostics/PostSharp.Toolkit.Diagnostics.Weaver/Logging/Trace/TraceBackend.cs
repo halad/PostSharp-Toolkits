@@ -37,15 +37,49 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
             private readonly ModuleDeclaration module;
 
             private readonly IMethod writeLineString;
+            private readonly IMethod traceInfoString;
+            private readonly IMethod traceInfoFormat;
+            private readonly IMethod traceWarningString;
+            private readonly IMethod traceWarningFormat;
+            private readonly IMethod traceErrorString;
+            private readonly IMethod traceErrorFormat;
 
             public TraceCategoryBuilder(ModuleDeclaration module)
             {
                 this.module = module;
 
-                this.writeLineString = module.FindMethod(
-                    module.Cache.GetType(typeof(System.Diagnostics.Trace)), "WriteLine",
+                ITypeSignature traceTypeSignature = module.Cache.GetType(typeof(System.Diagnostics.Trace));
+
+                this.writeLineString = module.FindMethod(traceTypeSignature, "WriteLine",
                     method => method.Parameters.Count == 1 &&
                               IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
+
+                this.traceInfoString = module.FindMethod(traceTypeSignature, "TraceInformation",
+                    method => method.Parameters.Count == 1 &&
+                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
+
+                this.traceInfoFormat = module.FindMethod(traceTypeSignature, "TraceInformation",
+                    method => method.Parameters.Count == 2 &&
+                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
+                              method.Parameters[1].ParameterType.BelongsToClassification(TypeClassifications.Array));
+
+                this.traceWarningString = module.FindMethod(traceTypeSignature, "TraceWarning",
+                    method => method.Parameters.Count == 1 &&
+                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
+
+                this.traceWarningFormat = module.FindMethod(traceTypeSignature, "TraceWarning",
+                    method => method.Parameters.Count == 2 &&
+                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
+                              method.Parameters[1].ParameterType.BelongsToClassification(TypeClassifications.Array));
+
+                this.traceErrorString = module.FindMethod(traceTypeSignature, "TraceError",
+                    method => method.Parameters.Count == 1 &&
+                    IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
+
+                this.traceErrorFormat = module.FindMethod(traceTypeSignature, "TraceError",
+                    method => method.Parameters.Count == 2 &&
+                              IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
+                              method.Parameters[1].ParameterType.BelongsToClassification(TypeClassifications.Array));
             }
 
             public bool SupportsIsEnabled
@@ -61,22 +95,40 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
                                   int argumentsCount, LogLevel logLevel, Action<InstructionWriter> getExceptionAction,
                                   Action<int, InstructionWriter> loadArgumentAction)
             {
-                bool createArgsArray = argumentsCount > 3;
+                bool useStringFormat = argumentsCount > 0;
+                bool createArgsArray = useStringFormat;
+                IMethod method;
+
+                switch (logLevel)
+                {
+                    case LogLevel.Trace:
+                        method = this.writeLineString;
+                        createArgsArray = false;
+                        break;
+                    case LogLevel.Info:
+                        method = useStringFormat ? this.traceInfoFormat : this.traceInfoString;
+                        break;
+                    case LogLevel.Warning:
+                        method = useStringFormat ? this.traceWarningFormat : this.traceWarningString;
+                        break;
+                    case LogLevel.Error:
+                    case LogLevel.Fatal:
+                        method = useStringFormat ? this.traceErrorFormat : this.traceErrorString;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("logLevel");
+                }
 
                 if (getExceptionAction != null)
                 {
                     getExceptionAction(writer);
+                }
 
-                    writer.EmitInstructionMethod(OpCodeNumber.Callvirt, this.module.FindMethod(
-                        this.module.Cache.GetType(typeof(object)), "ToString"));
-                }
-                else
-                {
-                    writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
-                }
+                writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
 
                 if (createArgsArray)
                 {
+                    writer.EmitInstructionInt32(OpCodeNumber.Ldc_I4, argumentsCount);
                     writer.EmitInstructionType(OpCodeNumber.Newarr,
                                                this.module.Cache.GetIntrinsicBoxedType(IntrinsicType.Object));
                 }
@@ -100,7 +152,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Trace
                     }
                 }
 
-                writer.EmitInstructionMethod(OpCodeNumber.Call, writeLineString);
+                writer.EmitInstructionMethod(OpCodeNumber.Call, method);
             }
         }
     }
