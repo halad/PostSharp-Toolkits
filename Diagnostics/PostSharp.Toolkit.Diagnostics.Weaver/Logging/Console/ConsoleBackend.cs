@@ -127,15 +127,16 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console
                         break;
                 }
 
-                writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
-                
                 if (getExceptionAction != null)
                 {
                     getExceptionAction(writer);
                 }
 
+                writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
+
                 if (createArgsArray)
                 {
+                    writer.EmitInstructionInt32(OpCodeNumber.Ldc_I4, argumentsCount);
                     writer.EmitInstructionType(OpCodeNumber.Newarr,
                                                this.module.Cache.GetIntrinsicBoxedType(IntrinsicType.Object));
                 }
