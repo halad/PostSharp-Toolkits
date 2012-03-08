@@ -49,9 +49,17 @@ namespace PostSharp.Toolkit.Tests.Log4Net
         }
 
         [Test]
-        public void UnderTest_Scenario_ExpectedResult()
+        public void Log4Net_OnException_PrintsException()
         {
-            
+            SimpleClass s = new SimpleClass();
+            try
+            {
+                s.MethodThrowsException();
+            }
+            catch { }
+
+            string output = OutputString.ToString();
+            StringAssert.Contains("An exception occurred:\nSystem.Exception", output);
         }
     }
 }

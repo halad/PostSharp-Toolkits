@@ -29,8 +29,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             this.transformation = new LoggingAspectTransformation(this, this.instrumentationPlugIn.Backend);
 
             ApplyWaivedEffects(this.transformation);
-
-
         }
 
         protected override AspectWeaverInstance CreateAspectWeaverInstance(AspectInstanceInfo aspectInstanceInfo)

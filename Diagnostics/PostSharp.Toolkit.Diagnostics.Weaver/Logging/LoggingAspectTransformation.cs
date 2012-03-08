@@ -89,7 +89,15 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     LocalVariableSymbol exceptionLocal = block.MethodBody.RootInstructionBlock.DefineLocalVariable(
                         exceptionType, DebuggerSpecialNames.GetVariableSpecialName("ex"));
 
-                    builder.EmitWrite(writer, block, "An exception occurred:\n{0}", 1, LogLevel.Warning,
+                    LogLevel logLevel = LogLevel.Warning;
+                    if (builder.SupportsIsEnabled)
+                    {
+                        builder.EmitGetIsEnabled(writer, logLevel);
+                        InstructionSequence branchSequence = block.AddInstructionSequence(null, NodePosition.After, sequence);
+                        writer.EmitBranchingInstruction(OpCodeNumber.Brfalse_S, branchSequence);
+                    }
+
+                    builder.EmitWrite(writer, block, "An exception occurred:\n{0}", 1, logLevel,
                                       w => w.EmitInstructionLocalVariable(OpCodeNumber.Stloc, exceptionLocal),
                                       (i, w) => w.EmitInstructionLocalVariable(OpCodeNumber.Ldloc, exceptionLocal));
 
@@ -133,7 +141,16 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                         writer.EmitBranchingInstruction(OpCodeNumber.Brfalse_S, branchSequence);
                     }
 
-                    builder.EmitWrite(writer, block, messageFormattingString, 0, LogLevel.Trace, null, null);
+                    int parameterCount = this.Context.MethodMapping.MethodSignature.ParameterCount;
+
+                    builder.EmitWrite(writer, block, messageFormattingString, parameterCount, LogLevel.Trace, null,
+                                      (i, instructionWriter) =>
+                                      {
+                                          instructionWriter.EmitInstructionInt16(OpCodeNumber.Ldarg, (short)i);
+                                          instructionWriter.EmitConvertToObject(
+                                              this.Context.MethodMapping.MethodSignature.GetParameterType(i));
+                                      });
+                    
                     writer.DetachInstructionSequence();
                 }
             }

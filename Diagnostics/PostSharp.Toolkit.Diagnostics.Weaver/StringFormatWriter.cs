@@ -6,6 +6,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
 {
     public sealed class StringFormatWriter
     {
+        private readonly ModuleDeclaration module;
         private readonly IMethod format1Method;
         private readonly IMethod format2Method;
         private readonly IMethod format3Method;
@@ -13,6 +14,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
 
         public StringFormatWriter(ModuleDeclaration module)
         {
+            this.module = module;
             ITypeSignature stringType = module.Cache.GetType(typeof(string));
 
             this.format1Method = module.FindMethod(stringType, "Format",
@@ -40,7 +42,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
 
         }
 
-        public void EmitFormatArguments(InstructionWriter writer, string format, int argumentsCount)
+        public void EmitFormatArguments(InstructionWriter writer, string format, int argumentsCount, Action<int, InstructionWriter> loadArgumentAction)
         {
             if (argumentsCount == 0) throw new ArgumentOutOfRangeException("argumentsCount");
 
@@ -64,9 +66,35 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver
                     break;
             }
 
+            writer.EmitInstructionString(OpCodeNumber.Ldstr, format);
 
+            if (createArgsArray)
+            {
+                writer.EmitInstructionInt32(OpCodeNumber.Ldc_I4, argumentsCount);
+                writer.EmitInstructionType(OpCodeNumber.Newarr,
+                                           this.module.Cache.GetIntrinsicBoxedType(IntrinsicType.Object));
+            }
 
+            for (int i = 0; i < argumentsCount; i++)
+            {
+                if (createArgsArray)
+                {
+                    writer.EmitInstruction(OpCodeNumber.Dup);
+                    writer.EmitInstructionInt32(OpCodeNumber.Ldc_I4, i);
+                }
 
+                if (loadArgumentAction != null)
+                {
+                    loadArgumentAction(i, writer);
+                }
+
+                if (createArgsArray)
+                {
+                    writer.EmitInstruction(OpCodeNumber.Stelem_Ref);
+                }
+            }
+
+            writer.EmitInstructionMethod(OpCodeNumber.Call, formatMethod);
         }
     }
 }

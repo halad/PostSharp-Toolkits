@@ -167,7 +167,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 
                 if (argumentsCount > 0)
                 {
-                    this.parent.formatWriter.EmitFormatArguments(writer, messageFormattingString, argumentsCount);
+                    this.parent.formatWriter.EmitFormatArguments(writer, messageFormattingString, argumentsCount, loadArgumentAction);
                 }
 
                 writer.EmitInstructionMethod(OpCodeNumber.Callvirt, method);
