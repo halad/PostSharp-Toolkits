@@ -14,15 +14,10 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
         private StringFormatWriter formatWriter;
 
         private IMethod writeDebugMethod;
-        private IMethod writeDebugExceptionMethod;
         private IMethod writeInfoMethod;
-        private IMethod writeInfoExceptionMethod;
         private IMethod writeWarnMethod;
-        private IMethod writeWarnExceptionMethod;
         private IMethod writeErrorMethod;
-        private IMethod writeErrorExceptionMethod;
         private IMethod writeFatalMethod;
-        private IMethod writeFatalExceptionMethod;
 
         private IMethod getIsTraceEnabledMethod;
         private IMethod getIsInfoEnabledMethod;
@@ -38,6 +33,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
             this.formatWriter = new StringFormatWriter(module);
 
             this.loggerType = module.FindType(typeof(Logger));
+
             Predicate<MethodDefDeclaration> singleMessagePredicate = 
                 method => method.Parameters.Count == 1 && 
                     IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String);
@@ -45,15 +41,10 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
             this.categoryInitializerMethod = module.FindMethod(module.FindType(typeof(LogManager)), "GetLogger", singleMessagePredicate);
 
             this.writeDebugMethod = module.FindMethod(this.loggerType, "Trace", singleMessagePredicate);
-            this.writeDebugExceptionMethod = module.FindMethod(this.loggerType, "TraceException");
             this.writeInfoMethod = module.FindMethod(this.loggerType, "Info", singleMessagePredicate);
-            this.writeInfoExceptionMethod = module.FindMethod(this.loggerType, "InfoException");
             this.writeWarnMethod = module.FindMethod(this.loggerType, "Warn", singleMessagePredicate);
-            this.writeWarnExceptionMethod = module.FindMethod(this.loggerType, "WarnException");
             this.writeErrorMethod = module.FindMethod(this.loggerType, "Error", singleMessagePredicate);
-            this.writeErrorExceptionMethod = module.FindMethod(this.loggerType, "ErrorException");
             this.writeFatalMethod = module.FindMethod(this.loggerType, "Fatal", singleMessagePredicate);
-            this.writeFatalExceptionMethod = module.FindMethod(this.loggerType, "FatalException");
 
             this.getIsTraceEnabledMethod = module.FindMethod(this.loggerType, "get_IsTraceEnabled");
             this.getIsInfoEnabledMethod = module.FindMethod(this.loggerType, "get_IsInfoEnabled");
@@ -133,41 +124,42 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
                                   int argumentsCount, LogLevel logLevel, Action<InstructionWriter> getExceptionAction,
                                   Action<int, InstructionWriter> loadArgumentAction)
             {
-                writer.EmitInstructionField(OpCodeNumber.Ldsfld, this.loggerField);
-                bool isException = getExceptionAction != null;
-
                 IMethod method;
                 switch (logLevel)
                 {
                     case LogLevel.Trace:
-                        method = isException ? this.parent.writeDebugExceptionMethod : this.parent.writeDebugMethod;
+                        method = this.parent.writeDebugMethod;
                         break;
                     case LogLevel.Info:
-                        method = isException ? this.parent.writeInfoExceptionMethod : this.parent.writeInfoMethod;
+                        method = this.parent.writeInfoMethod;
                         break;
                     case LogLevel.Warning:
-                        method = isException ? this.parent.writeWarnExceptionMethod : this.parent.writeWarnMethod;
+                        method = this.parent.writeWarnMethod;
                         break;
                     case LogLevel.Error:
-                        method = isException ? this.parent.writeErrorExceptionMethod : this.parent.writeErrorMethod;
+                        method = this.parent.writeErrorMethod;
                         break;
                     case LogLevel.Fatal:
-                        method = isException ? this.parent.writeFatalExceptionMethod : this.parent.writeFatalMethod;
+                        method = this.parent.writeFatalMethod;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException("logLevel");
                 }
-
-                writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
 
                 if (getExceptionAction != null)
                 {
                     getExceptionAction(writer);
                 }
 
+                writer.EmitInstructionField(OpCodeNumber.Ldsfld, this.loggerField);
+
                 if (argumentsCount > 0)
                 {
                     this.parent.formatWriter.EmitFormatArguments(writer, messageFormattingString, argumentsCount, loadArgumentAction);
+                }
+                else
+                {
+                    writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
                 }
 
                 writer.EmitInstructionMethod(OpCodeNumber.Callvirt, method);

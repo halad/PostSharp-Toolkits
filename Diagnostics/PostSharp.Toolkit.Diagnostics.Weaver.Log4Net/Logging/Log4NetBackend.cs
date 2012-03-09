@@ -13,11 +13,11 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
         private LoggingImplementationTypeBuilder loggingImplementation;
         private StringFormatWriter formatWriter;
 
-        private IMethod writeDebugArrayMethod;
-        private IMethod writeInfoArrayMethod;
-        private IMethod writeWarningArrayMethod;
-        private IMethod writeErrorArrayMethod;
-        private IMethod writeFatalArrayMethod;
+        private IMethod writeDebugMethod;
+        private IMethod writeInfoMethod;
+        private IMethod writeWarningMethod;
+        private IMethod writeErrorMethod;
+        private IMethod writeFatalMethod;
         
         private IMethod getIsDebugEnabledMethod;
         private IMethod getIsInfoEnabledMethod;
@@ -27,98 +27,27 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
         private IMethod categoryInitializerMethod;
         private ITypeSignature loggerType;
 
-        private Predicate<MethodDefDeclaration> format1Predicate;
-        private Predicate<MethodDefDeclaration> format2Predicate;
-        private Predicate<MethodDefDeclaration> format3Predicate;
-        private Predicate<MethodDefDeclaration> formatArrayPredicate;
-
-        private readonly Dictionary<LogLevel, Dictionary<int, IMethod>> loggerMethods = new Dictionary<LogLevel, Dictionary<int, IMethod>>
-        {
-            { LogLevel.Trace, new Dictionary<int, IMethod>() },
-            { LogLevel.Info, new Dictionary<int, IMethod>() },
-            { LogLevel.Warning, new Dictionary<int, IMethod>() },
-            { LogLevel.Error, new Dictionary<int, IMethod>() },
-            { LogLevel.Fatal, new Dictionary<int, IMethod>() },
-        };
-
         public void Initialize(ModuleDeclaration module)
         {
             this.loggingImplementation = new LoggingImplementationTypeBuilder(module);
+            this.formatWriter = new StringFormatWriter(module);
             this.loggerType = module.FindType(typeof(ILog));
 
             this.categoryInitializerMethod = module.FindMethod(module.FindType(typeof(LogManager)), "GetLogger",
                 method => method.Parameters.Count == 1 &&
                           IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String));
 
-            this.format1Predicate = method => 
-                method.Parameters.Count == 2 && 
-                IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) && 
-                IntrinsicTypeSignature.Is(method.Parameters[1].ParameterType, IntrinsicType.Object);
-
-            this.format2Predicate = method => 
-                method.Parameters.Count == 3 &&
-                IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
-                IntrinsicTypeSignature.Is(method.Parameters[1].ParameterType, IntrinsicType.Object) &&
-                IntrinsicTypeSignature.Is(method.Parameters[2].ParameterType, IntrinsicType.Object);
-
-            this.format3Predicate = method =>
-                method.Parameters.Count == 4 &&
-                IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
-                IntrinsicTypeSignature.Is(method.Parameters[1].ParameterType, IntrinsicType.Object) &&
-                IntrinsicTypeSignature.Is(method.Parameters[2].ParameterType, IntrinsicType.Object) &&
-                IntrinsicTypeSignature.Is(method.Parameters[3].ParameterType, IntrinsicType.Object);
-
-            this.formatArrayPredicate = 
-                method => method.Parameters.Count == 2 &&
-                          IntrinsicTypeSignature.Is(method.Parameters[0].ParameterType, IntrinsicType.String) &&
-                          method.Parameters[1].ParameterType.BelongsToClassification(TypeClassifications.Array);
-
-            this.InitializeLoggerMethodsDictionary(module);
+            this.writeDebugMethod = module.FindMethod(this.loggerType, "Debug", 1);
+            this.writeInfoMethod = module.FindMethod(this.loggerType, "Info", 1);
+            this.writeWarningMethod = module.FindMethod(this.loggerType, "Warn", 1);
+            this.writeErrorMethod = module.FindMethod(this.loggerType, "Error", 1);
+            this.writeFatalMethod = module.FindMethod(this.loggerType, "Fatal", 1);
 
             this.getIsDebugEnabledMethod = module.FindMethod(this.loggerType, "get_IsDebugEnabled");
             this.getIsInfoEnabledMethod = module.FindMethod(this.loggerType, "get_IsInfoEnabled");
             this.getIsWarnEnabledMethod = module.FindMethod(this.loggerType, "get_IsWarnEnabled");
             this.getIsErrorEnabledMethod = module.FindMethod(this.loggerType, "get_IsErrorEnabled");
             this.getIsFatalEnabledMethod = module.FindMethod(this.loggerType, "get_IsFatalEnabled");
-        }
-
-        private void InitializeLoggerMethodsDictionary(ModuleDeclaration module)
-        {
-            this.loggerMethods[LogLevel.Trace][0] = module.FindMethod(this.loggerType, "Debug", 1);
-            this.loggerMethods[LogLevel.Trace][1] = module.FindMethod(this.loggerType, "DebugFormat", this.format1Predicate);
-            this.loggerMethods[LogLevel.Trace][2] = module.FindMethod(this.loggerType, "DebugFormat", this.format2Predicate);
-            this.loggerMethods[LogLevel.Trace][3] = module.FindMethod(this.loggerType, "DebugFormat", this.format3Predicate);
-            this.writeDebugArrayMethod = module.FindMethod(this.loggerType, "DebugFormat", this.formatArrayPredicate);
-
-            this.loggerMethods[LogLevel.Info][0] = module.FindMethod(this.loggerType, "Info", 1);
-            this.loggerMethods[LogLevel.Info][1] = module.FindMethod(this.loggerType, "InfoFormat", this.format1Predicate);
-            this.loggerMethods[LogLevel.Info][2] = module.FindMethod(this.loggerType, "InfoFormat", this.format2Predicate);
-            this.loggerMethods[LogLevel.Info][3] = module.FindMethod(this.loggerType, "InfoFormat", this.format3Predicate);
-            this.writeInfoArrayMethod = module.FindMethod(this.loggerType, "InfoFormat", this.formatArrayPredicate);
-
-            this.loggerMethods[LogLevel.Warning][0] = module.FindMethod(this.loggerType, "Warn", 1);
-            this.loggerMethods[LogLevel.Warning][1] = module.FindMethod(this.loggerType, "WarnFormat", this.format1Predicate);
-            this.loggerMethods[LogLevel.Warning][2] = module.FindMethod(this.loggerType, "WarnFormat", this.format2Predicate);
-            this.loggerMethods[LogLevel.Warning][3] = module.FindMethod(this.loggerType, "WarnFormat", this.format3Predicate);
-            this.writeWarningArrayMethod = module.FindMethod(this.loggerType, "WarnFormat", this.formatArrayPredicate);
-
-            this.loggerMethods[LogLevel.Warning][0] = module.FindMethod(this.loggerType, "Warn", 1);
-            this.loggerMethods[LogLevel.Warning][1] = module.FindMethod(this.loggerType, "WarnFormat", this.format1Predicate);
-            this.loggerMethods[LogLevel.Warning][2] = module.FindMethod(this.loggerType, "WarnFormat", this.format2Predicate);
-            this.loggerMethods[LogLevel.Warning][3] = module.FindMethod(this.loggerType, "WarnFormat", this.format3Predicate);
-            this.writeErrorArrayMethod = module.FindMethod(this.loggerType, "ErrorFormat", this.formatArrayPredicate);
-
-            this.loggerMethods[LogLevel.Error][0] = module.FindMethod(this.loggerType, "Error", 1);
-            this.loggerMethods[LogLevel.Error][1] = module.FindMethod(this.loggerType, "ErrorFormat", this.format1Predicate);
-            this.loggerMethods[LogLevel.Error][2] = module.FindMethod(this.loggerType, "ErrorFormat", this.format2Predicate);
-            this.loggerMethods[LogLevel.Error][3] = module.FindMethod(this.loggerType, "ErrorFormat", this.format3Predicate);
-            this.writeErrorArrayMethod = module.FindMethod(this.loggerType, "ErrorFormat", this.formatArrayPredicate);
-
-            this.loggerMethods[LogLevel.Fatal][0] = module.FindMethod(this.loggerType, "Fatal", 1);
-            this.loggerMethods[LogLevel.Fatal][1] = module.FindMethod(this.loggerType, "FatalFormat", this.format1Predicate);
-            this.loggerMethods[LogLevel.Fatal][2] = module.FindMethod(this.loggerType, "FatalFormat", this.format2Predicate);
-            this.loggerMethods[LogLevel.Fatal][3] = module.FindMethod(this.loggerType, "FatalFormat", this.format3Predicate);
-            this.writeFatalArrayMethod = module.FindMethod(this.loggerType, "FatalFormat", this.formatArrayPredicate);
         }
 
         public ILoggingBackendInstance CreateInstance(AspectWeaverInstance aspectWeaverInstance)
@@ -196,32 +125,26 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
                                   int argumentsCount, LogLevel logLevel, Action<InstructionWriter> getExceptionAction,
                                   Action<int, InstructionWriter> loadArgumentAction)
             {
-                bool createArgsArray = false;
-
                 IMethod method;
-                if (!this.parent.loggerMethods[logLevel].TryGetValue(argumentsCount, out method))
+                switch (logLevel)
                 {
-                    createArgsArray = true;
-                    switch (logLevel)
-                    {
-                        case LogLevel.Trace:
-                            method = this.parent.writeDebugArrayMethod;
-                            break;
-                        case LogLevel.Info:
-                            method = this.parent.writeInfoArrayMethod;
-                            break;
-                        case LogLevel.Warning:
-                            method = this.parent.writeWarningArrayMethod;
-                            break;
-                        case LogLevel.Error:
-                            method = this.parent.writeErrorArrayMethod;
-                            break;
-                        case LogLevel.Fatal:
-                            method = this.parent.writeFatalArrayMethod;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException("logLevel");
-                    }
+                    case LogLevel.Trace:
+                        method = this.parent.writeDebugMethod;
+                        break;
+                    case LogLevel.Info:
+                        method = this.parent.writeInfoMethod;
+                        break;
+                    case LogLevel.Warning:
+                        method = this.parent.writeWarningMethod;
+                        break;
+                    case LogLevel.Error:
+                        method = this.parent.writeErrorMethod;
+                        break;
+                    case LogLevel.Fatal:
+                        method = this.parent.writeFatalMethod;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("logLevel");
                 }
 
                 if (getExceptionAction != null)
@@ -230,33 +153,14 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Log4Net.Logging
                 }
 
                 writer.EmitInstructionField(OpCodeNumber.Ldsfld, this.loggerField);
-                
-                writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
 
-                if (createArgsArray)
+                if (argumentsCount > 0)
                 {
-                    writer.EmitInstructionInt32(OpCodeNumber.Ldc_I4, argumentsCount);
-                    writer.EmitInstructionType(OpCodeNumber.Newarr,
-                                               this.module.Cache.GetIntrinsicBoxedType(IntrinsicType.Object));
+                    this.parent.formatWriter.EmitFormatArguments(writer, messageFormattingString, argumentsCount, loadArgumentAction);
                 }
-
-                for (int i = 0; i < argumentsCount; i++)
+                else
                 {
-                    if (createArgsArray)
-                    {
-                        writer.EmitInstruction(OpCodeNumber.Dup);
-                        writer.EmitInstructionInt32(OpCodeNumber.Ldc_I4, i);
-                    }
-
-                    if (loadArgumentAction != null)
-                    {
-                        loadArgumentAction(i, writer);
-                    }
-
-                    if (createArgsArray)
-                    {
-                        writer.EmitInstruction(OpCodeNumber.Stelem_Ref);
-                    }
+                    writer.EmitInstructionString(OpCodeNumber.Ldstr, messageFormattingString);
                 }
 
                 writer.EmitInstructionMethod(OpCodeNumber.Callvirt, method);

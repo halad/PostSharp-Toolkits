@@ -46,7 +46,7 @@ namespace PostSharp.Toolkit.Tests.NLog
                 "TRACE|TestAssembly.SimpleClass|Exiting: TestAssembly.SimpleClass/set_Property1(string value)", output);
         }
 
-        [Test, Ignore("Depends on the logger layout")]
+        [Test]
         public void NLog_OnException_PrintsException()
         {
             SimpleClass s = new SimpleClass();

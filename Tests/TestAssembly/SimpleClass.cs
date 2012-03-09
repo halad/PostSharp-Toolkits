@@ -20,5 +20,10 @@ namespace TestAssembly
             
             throw new Exception("This is an exception");
         }
+
+        public void MethodWithArguments(string stringArg, int intArg)
+        {
+            
+        }
     }
 }
