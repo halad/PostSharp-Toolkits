@@ -63,5 +63,15 @@ namespace PostSharp.Toolkit.Tests
             string output = OutputString.ToString();
             StringAssert.Contains("An exception occurred:\nSystem.Exception", output);
         }
+
+        [Test]
+        public void LoggingToolkit_MethodArguments_LogsMethodArgumentNames()
+        {
+            SimpleClass s = new SimpleClass();
+            s.MethodWithArguments("TEST", 12345);
+
+            string output = OutputString.ToString();
+            Console.WriteLine(output);
+        }
     }
 }

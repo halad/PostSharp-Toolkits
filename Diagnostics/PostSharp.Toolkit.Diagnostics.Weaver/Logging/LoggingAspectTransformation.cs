@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using PostSharp.Sdk.AspectInfrastructure;
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.AspectWeaver.Transformations;
@@ -31,6 +32,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
         public class LoggingAspectTransformationInstance : MethodBodyTransformationInstance
         {
             private readonly LoggingAspectTransformation parent;
+
             public LoggingAspectTransformationInstance(LoggingAspectTransformation parent, AspectWeaverInstance aspectWeaverInstance)
                 : base(parent, aspectWeaverInstance)
             {
@@ -51,17 +53,22 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             private sealed class Implementation : MethodBodyWrappingImplementation
             {
                 private readonly LoggingAspectTransformationInstance transformationInstance;
-                private readonly string codeElementName;
                 private readonly ILoggingBackendInstance backendInstance;
+                private readonly LogParameters onEntryParameter;
+                private readonly LogParameters onExitParameter;
 
                 public Implementation(LoggingAspectTransformationInstance transformationInstance, MethodBodyTransformationContext context)
                     : base(transformationInstance.AspectWeaver.AspectInfrastructureTask, context)
                 {
                     this.transformationInstance = transformationInstance;
-                    this.codeElementName = string.Format("{0} ({1})", transformationInstance.AspectWeaverInstance.TargetElement,
-                                                                      context.MethodSemantic);
-
                     this.backendInstance = this.transformationInstance.parent.backend.CreateInstance(transformationInstance.AspectWeaverInstance);
+
+                    // todo fix configuration
+                    //this.onEntryParameter = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogParameters>(c => c.OnEntryParameter);
+                    //this.onExitParameter = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogParameters>(c => c.OnExitParameter);
+
+                    this.onEntryParameter = LogParameters.ParameterTypes | LogParameters.ParameterNames |
+                                            LogParameters.ParameterValues;
                 }
 
                 public void Implement()
@@ -107,7 +114,51 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 
                 protected override void ImplementOnExit(InstructionBlock block, InstructionWriter writer)
                 {
-                    this.EmitMessage(block, writer, "Exiting: " + this.codeElementName);
+                    MethodDefDeclaration targetMethod = Context.TargetElement as MethodDefDeclaration;
+                    if (targetMethod == null)
+                    {
+                        return;
+                    }
+
+                    string messageFormatString = this.CreateMessageFormatString(this.onExitParameter, targetMethod);
+
+                    this.EmitMessage(block, writer, targetMethod, "Exiting: " + messageFormatString);
+                }
+
+                private string CreateMessageFormatString(LogParameters logParameter, MethodDefDeclaration targetMethod)
+                {
+                    StringBuilder formatBuilder = new StringBuilder();
+
+                    formatBuilder.AppendFormat("{0}.{1}", targetMethod.DeclaringType, targetMethod.Name);
+                    formatBuilder.Append("(");
+
+                    int parameterCount = Context.MethodMapping.MethodSignature.ParameterCount;
+                    for (int i = 0; i < parameterCount; i++)
+                    {
+                        if (i > 0)
+                        {
+                            formatBuilder.Append(", ");
+                        }
+
+                        if ((logParameter & LogParameters.ParameterTypes) != 0)
+                        {
+                            formatBuilder.Append(Context.MethodMapping.MethodSignature.GetParameterType(i).GetDisplayName());
+                            formatBuilder.Append(' ');
+                        }
+                        if ((logParameter & LogParameters.ParameterNames) != 0)
+                        {
+                            formatBuilder.Append(Context.MethodMapping.MethodMappingInformation.GetParameterName(i));
+                            formatBuilder.Append(' ');
+                        }
+                        if ((logParameter & LogParameters.ParameterValues) != 0)
+                        {
+                            formatBuilder.AppendFormat(" = {{{0}}}", i);
+                        }
+                    }
+
+                    formatBuilder.Append(")");
+
+                    return formatBuilder.ToString();
                 }
 
                 protected override void ImplementOnSuccess(InstructionBlock block, InstructionWriter writer)
@@ -116,17 +167,19 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 
                 protected override void ImplementOnEntry(InstructionBlock block, InstructionWriter writer)
                 {
-                    this.EmitMessage(block, writer, "Entering: " + this.codeElementName);
-                }
-
-                private void EmitMessage(InstructionBlock block, InstructionWriter writer, string messageFormattingString)
-                {
-                    MethodDefDeclaration targetMethod = this.transformationInstance.AspectWeaverInstance.TargetElement as MethodDefDeclaration;
+                    MethodDefDeclaration targetMethod = Context.TargetElement as MethodDefDeclaration;
                     if (targetMethod == null)
                     {
                         return;
                     }
 
+                    string messageFormatString = this.CreateMessageFormatString(this.onEntryParameter, targetMethod);
+
+                    this.EmitMessage(block, writer, targetMethod, "Entering: " + messageFormatString);
+                }
+
+                private void EmitMessage(InstructionBlock block, InstructionWriter writer, MethodDefDeclaration targetMethod, string messageFormatString)
+                {
                     // TODO: nested types
                     string category = targetMethod.DeclaringType.Name;
                     ILoggingCategoryBuilder builder = this.backendInstance.GetCategoryBuilder(category);
@@ -141,9 +194,9 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                         writer.EmitBranchingInstruction(OpCodeNumber.Brfalse_S, branchSequence);
                     }
 
-                    int parameterCount = this.Context.MethodMapping.MethodSignature.ParameterCount;
+                    int parameterCount = Context.MethodMapping.MethodSignature.ParameterCount;
 
-                    builder.EmitWrite(writer, block, messageFormattingString, parameterCount, LogLevel.Trace, null,
+                    builder.EmitWrite(writer, block, messageFormatString, parameterCount, LogLevel.Trace, null,
                                       (i, instructionWriter) =>
                                       {
                                           instructionWriter.EmitInstructionInt16(OpCodeNumber.Ldarg, (short)i);

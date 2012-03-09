@@ -47,7 +47,10 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ILogAspect.cs" />
+    <Compile Include="LogAspectConfiguration.cs" />
+    <Compile Include="LogAspectConfigurationAttribute.cs" />
     <Compile Include="LogAttribute.cs" />
+    <Compile Include="LogParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

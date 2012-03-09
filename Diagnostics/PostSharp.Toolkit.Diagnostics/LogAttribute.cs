@@ -1,5 +1,6 @@
 using System;
 using PostSharp.Aspects;
+using PostSharp.Aspects.Configuration;
 using PostSharp.Extensibility;
 
 namespace PostSharp.Toolkit.Diagnostics
@@ -14,7 +15,9 @@ namespace PostSharp.Toolkit.Diagnostics
       AllowMultiple = true)]
     [Metric("UsedFeatures", "Toolkit.Diagnostics.Logging")]
     //[AspectConfigurationAttributeType(typeof(LogAspectConfigurationAttribute))]
+    //[LogAspectConfiguration(OnEntryLogParameter = LogParameters.ParameterNames | LogParameters.ParameterTypes | LogParameters.ParameterValues, OnExitLogParameter = LogParameters.None)]
     public class LogAttribute : MethodLevelAspect, ILogAspect, ILogAspectBuildSemantics
     {
+
     }
 }
