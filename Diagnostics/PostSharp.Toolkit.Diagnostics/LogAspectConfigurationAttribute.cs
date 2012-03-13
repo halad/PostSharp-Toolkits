@@ -4,18 +4,25 @@ namespace PostSharp.Toolkit.Diagnostics
 {
     public class LogAspectConfigurationAttribute : AspectConfigurationAttribute
     {
-        private LogParameters? onEntryParameter;
-        public LogParameters OnEntryLogParameter
+        private LogOptions? onEntryOptions;
+        public LogOptions OnEntryLogOptions
         {
-            get { return this.onEntryParameter.GetValueOrDefault(LogParameters.None); }
-            set { this.onEntryParameter = value; }
+            get { return this.onEntryOptions.GetValueOrDefault(LogOptions.None); }
+            set { this.onEntryOptions = value; }
         }
 
-        private LogParameters? onExitParameter;
-        public LogParameters OnExitLogParameter
+        private LogOptions? onSuccessOptions;
+        public LogOptions OnSuccessLogOptions
         {
-            get { return this.onExitParameter.GetValueOrDefault(LogParameters.None); }
-            set { this.onExitParameter = value; }
+            get { return this.onSuccessOptions.GetValueOrDefault(LogOptions.None); }
+            set { this.onSuccessOptions = value; }
+        }
+
+        private LogOptions? onExceptionOptions;
+        public LogOptions OnExceptionLogOptions
+        {
+            get { return this.onExceptionOptions.GetValueOrDefault(LogOptions.None); }
+            set { this.onExceptionOptions = value; }
         }
 
         protected override void SetAspectConfiguration(AspectConfiguration aspectConfiguration)
@@ -23,8 +30,9 @@ namespace PostSharp.Toolkit.Diagnostics
             base.SetAspectConfiguration(aspectConfiguration);
 
             LogAspectConfiguration configuration = (LogAspectConfiguration)aspectConfiguration;
-            configuration.OnEntryParameter = this.onEntryParameter;
-            configuration.OnEntryParameter = this.onExitParameter;
+            configuration.OnEntryOptions = this.onEntryOptions;
+            configuration.OnSuccessOptions = this.onSuccessOptions;
+            configuration.OnExceptionOptions = this.onExceptionOptions;
         }
 
         protected override AspectConfiguration CreateAspectConfiguration()

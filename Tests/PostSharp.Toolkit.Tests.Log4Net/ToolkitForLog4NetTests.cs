@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using TestAssembly;
-using log4net;
 using log4net.Config;
 
 namespace PostSharp.Toolkit.Tests.Log4Net
@@ -22,8 +21,7 @@ namespace PostSharp.Toolkit.Tests.Log4Net
             s.Method1();
 
             string output = OutputString.ToString();
-            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Entering: TestAssembly.SimpleClass/Method1()", output);
-            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Exiting: TestAssembly.SimpleClass/Method1()", output);
+            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Entering: TestAssembly.SimpleClass.Method1()", output);
         }
 
         [Test]
@@ -33,8 +31,7 @@ namespace PostSharp.Toolkit.Tests.Log4Net
             string value = s.Property1;
 
             string output = OutputString.ToString();
-            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Entering: TestAssembly.SimpleClass/get_Property1()", output);
-            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Exiting: TestAssembly.SimpleClass/get_Property1()", output);
+            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Entering: TestAssembly.SimpleClass.get_Property1()", output);
         }
 
         [Test]
@@ -44,8 +41,7 @@ namespace PostSharp.Toolkit.Tests.Log4Net
             s.Property1 = "Test";
 
             string output = OutputString.ToString();
-            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Entering: TestAssembly.SimpleClass/set_Property1(string value)", output);
-            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Exiting: TestAssembly.SimpleClass/set_Property1(string value)", output);
+            StringAssert.Contains("DEBUG TestAssembly.SimpleClass (null) - Entering: TestAssembly.SimpleClass.set_Property1(string value = \"Test\")", output);
         }
 
         [Test]

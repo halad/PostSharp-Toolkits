@@ -15,9 +15,45 @@ namespace PostSharp.Toolkit.Diagnostics
       AllowMultiple = true)]
     [Metric("UsedFeatures", "Toolkit.Diagnostics.Logging")]
     //[AspectConfigurationAttributeType(typeof(LogAspectConfigurationAttribute))]
-    //[LogAspectConfiguration(OnEntryLogParameter = LogParameters.ParameterNames | LogParameters.ParameterTypes | LogParameters.ParameterValues, OnExitLogParameter = LogParameters.None)]
+    //[LogAspectConfiguration(OnEntryLogOptions = LogOptions.IncludeParameterName | LogOptions.IncludeParameterType | LogOptions.IncludeParameterValue, OnExitLogOption = LogOptions.None)]
     public class LogAttribute : MethodLevelAspect, ILogAspect, ILogAspectBuildSemantics
     {
+#if !SMALL
+        private LogOptions? onEntryOptions;
+        public LogOptions OnEntryLogOptions
+        {
+            get { return this.onEntryOptions.GetValueOrDefault(LogOptions.None); }
+            set { this.onEntryOptions = value; }
+        }
 
+        private LogOptions? onSuccessOptions;
+        public LogOptions OnSuccessLogOptions
+        {
+            get { return this.onSuccessOptions.GetValueOrDefault(LogOptions.None); }
+            set { this.onSuccessOptions = value; }
+        }
+
+        private LogOptions? onExceptionOptions;
+        public LogOptions OnExceptionLogOptions
+        {
+            get { return this.onSuccessOptions.GetValueOrDefault(LogOptions.None); }
+            set { this.onSuccessOptions = value; }
+        }
+
+        protected override AspectConfiguration CreateAspectConfiguration()
+        {
+            return new LogAspectConfiguration();
+        }
+
+        protected override void SetAspectConfiguration(AspectConfiguration aspectConfiguration, System.Reflection.MethodBase targetMethod)
+        {
+            LogAspectConfiguration configuration = (LogAspectConfiguration)aspectConfiguration;
+            configuration.OnEntryOptions = this.onEntryOptions;
+            configuration.OnSuccessOptions = this.onSuccessOptions;
+            configuration.OnExceptionOptions = this.onExceptionOptions;
+        }
+#endif
     }
+
+  
 }

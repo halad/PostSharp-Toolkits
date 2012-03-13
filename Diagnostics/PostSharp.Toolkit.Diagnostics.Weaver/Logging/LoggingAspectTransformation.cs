@@ -4,6 +4,7 @@ using PostSharp.Sdk.AspectInfrastructure;
 using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.AspectWeaver.Transformations;
 using PostSharp.Sdk.CodeModel;
+using PostSharp.Sdk.CodeModel.TypeSignatures;
 using PostSharp.Sdk.Collections;
 using PostSharp.Sdk.Utilities;
 
@@ -54,8 +55,8 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
             {
                 private readonly LoggingAspectTransformationInstance transformationInstance;
                 private readonly ILoggingBackendInstance backendInstance;
-                private readonly LogParameters onEntryParameter;
-                private readonly LogParameters onExitParameter;
+                private readonly LogOptions onEntryOptions;
+                private readonly LogOptions onSuccessOptions;
 
                 public Implementation(LoggingAspectTransformationInstance transformationInstance, MethodBodyTransformationContext context)
                     : base(transformationInstance.AspectWeaver.AspectInfrastructureTask, context)
@@ -64,18 +65,21 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     this.backendInstance = this.transformationInstance.parent.backend.CreateInstance(transformationInstance.AspectWeaverInstance);
 
                     // todo fix configuration
-                    //this.onEntryParameter = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogParameters>(c => c.OnEntryParameter);
-                    //this.onExitParameter = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogParameters>(c => c.OnExitParameter);
-
-                    this.onEntryParameter = LogParameters.ParameterTypes | LogParameters.ParameterNames |
-                                            LogParameters.ParameterValues;
+                    this.onEntryOptions = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogOptions>(c => c.OnEntryOptions);
+                    this.onSuccessOptions = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogOptions>(c => c.OnSuccessOptions);
                 }
 
                 public void Implement()
                 {
                     ITypeSignature exceptionSignature = this.transformationInstance.AspectWeaver.Module.Cache.GetType(typeof(Exception));
 
-                    Implement(true, false, true, new[] { exceptionSignature });
+                    bool hasOnEntry = (this.onEntryOptions != LogOptions.None &&
+                                       (this.onEntryOptions & LogOptions.NotLogged) != 0);
+
+                    bool hasOnSuccess = (this.onSuccessOptions != LogOptions.None &&
+                                         (this.onSuccessOptions & LogOptions.NotLogged) != 0);
+
+                    Implement(hasOnEntry, hasOnSuccess, false, new[] { exceptionSignature });
                     this.Context.AddRedirection(this.Redirection);
                 }
 
@@ -114,55 +118,6 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
 
                 protected override void ImplementOnExit(InstructionBlock block, InstructionWriter writer)
                 {
-                    MethodDefDeclaration targetMethod = Context.TargetElement as MethodDefDeclaration;
-                    if (targetMethod == null)
-                    {
-                        return;
-                    }
-
-                    string messageFormatString = this.CreateMessageFormatString(this.onExitParameter, targetMethod);
-
-                    this.EmitMessage(block, writer, targetMethod, "Exiting: " + messageFormatString);
-                }
-
-                private string CreateMessageFormatString(LogParameters logParameter, MethodDefDeclaration targetMethod)
-                {
-                    StringBuilder formatBuilder = new StringBuilder();
-
-                    formatBuilder.AppendFormat("{0}.{1}", targetMethod.DeclaringType, targetMethod.Name);
-                    formatBuilder.Append("(");
-
-                    int parameterCount = Context.MethodMapping.MethodSignature.ParameterCount;
-                    for (int i = 0; i < parameterCount; i++)
-                    {
-                        if (i > 0)
-                        {
-                            formatBuilder.Append(", ");
-                        }
-
-                        if ((logParameter & LogParameters.ParameterTypes) != 0)
-                        {
-                            formatBuilder.Append(Context.MethodMapping.MethodSignature.GetParameterType(i).GetDisplayName());
-                            formatBuilder.Append(' ');
-                        }
-                        if ((logParameter & LogParameters.ParameterNames) != 0)
-                        {
-                            formatBuilder.Append(Context.MethodMapping.MethodMappingInformation.GetParameterName(i));
-                            formatBuilder.Append(' ');
-                        }
-                        if ((logParameter & LogParameters.ParameterValues) != 0)
-                        {
-                            formatBuilder.AppendFormat(" = {{{0}}}", i);
-                        }
-                    }
-
-                    formatBuilder.Append(")");
-
-                    return formatBuilder.ToString();
-                }
-
-                protected override void ImplementOnSuccess(InstructionBlock block, InstructionWriter writer)
-                {
                 }
 
                 protected override void ImplementOnEntry(InstructionBlock block, InstructionWriter writer)
@@ -173,9 +128,22 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                         return;
                     }
 
-                    string messageFormatString = this.CreateMessageFormatString(this.onEntryParameter, targetMethod);
+                    string messageFormatString = this.CreateMessageFormatString(this.onEntryOptions, targetMethod);
 
                     this.EmitMessage(block, writer, targetMethod, "Entering: " + messageFormatString);
+                }
+
+                protected override void ImplementOnSuccess(InstructionBlock block, InstructionWriter writer)
+                {
+                    MethodDefDeclaration targetMethod = Context.TargetElement as MethodDefDeclaration;
+                    if (targetMethod == null)
+                    {
+                        return;
+                    }
+
+                    string messageFormatString = this.CreateMessageFormatString(this.onSuccessOptions, targetMethod);
+
+                    this.EmitMessage(block, writer, targetMethod, "Leaving: " + messageFormatString);
                 }
 
                 private void EmitMessage(InstructionBlock block, InstructionWriter writer, MethodDefDeclaration targetMethod, string messageFormatString)
@@ -195,16 +163,65 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     }
 
                     int parameterCount = Context.MethodMapping.MethodSignature.ParameterCount;
+                    bool hasThis = Context.MethodMapping.MethodSignature.CallingConvention == CallingConvention.HasThis;
 
                     builder.EmitWrite(writer, block, messageFormatString, parameterCount, LogLevel.Trace, null,
                                       (i, instructionWriter) =>
                                       {
-                                          instructionWriter.EmitInstructionInt16(OpCodeNumber.Ldarg, (short)i);
+                                          instructionWriter.EmitInstructionInt16(OpCodeNumber.Ldarg, (short)(hasThis ? i + 1 : i));
                                           instructionWriter.EmitConvertToObject(
                                               this.Context.MethodMapping.MethodSignature.GetParameterType(i));
                                       });
                     
                     writer.DetachInstructionSequence();
+                }
+
+                private string CreateMessageFormatString(LogOptions logOption, MethodDefDeclaration targetMethod)
+                {
+                    StringBuilder formatBuilder = new StringBuilder();
+
+                    formatBuilder.AppendFormat("{0}.{1}", targetMethod.DeclaringType, targetMethod.Name);
+                    formatBuilder.Append("(");
+
+                    int parameterCount = Context.MethodMapping.MethodSignature.ParameterCount;
+                    for (int i = 0; i < parameterCount; i++)
+                    {
+                        if (i > 0)
+                        {
+                            formatBuilder.Append(", ");
+                        }
+
+                        ITypeSignature parameterType = Context.MethodMapping.MethodSignature.GetParameterType(i);
+                        if ((logOption & LogOptions.IncludeParameterType) != 0)
+                        {
+                            formatBuilder.Append(parameterType.ToString());
+                            formatBuilder.Append(' ');
+                        }
+
+                        if ((logOption & LogOptions.IncludeParameterName) != 0)
+                        {
+                            formatBuilder.Append(Context.MethodMapping.MethodMappingInformation.GetParameterName(i));
+                            formatBuilder.Append(' ');
+                        }
+
+                        if ((logOption & LogOptions.IncludeParameterValue) != 0)
+                        {
+                            formatBuilder.AppendFormat("= ");
+
+                            if (IntrinsicTypeSignature.Is(parameterType, IntrinsicType.String))
+                            {
+                                formatBuilder.AppendFormat("\"" + "{{{0}}}" + "\"", i);
+                            }
+                            else
+                            {
+                                formatBuilder.AppendFormat("{{{0}}}", i);
+                            }
+                        }
+                    }
+
+                    formatBuilder.Append(")");
+
+                    return formatBuilder.ToString();
                 }
             }
         }

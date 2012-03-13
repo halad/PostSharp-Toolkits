@@ -22,8 +22,7 @@ namespace PostSharp.Toolkit.Tests.Trace
             s.Method1();
 
             string output = OutputString.ToString();
-            StringAssert.Contains("Entering: TestAssembly.SimpleClass/Method1() : void (None)", output);
-            StringAssert.Contains("Exiting: TestAssembly.SimpleClass/Method1() : void (None)", output);
+            StringAssert.Contains("Entering: TestAssembly.SimpleClass.Method1()", output);
         }
 
         [Test]
@@ -33,8 +32,7 @@ namespace PostSharp.Toolkit.Tests.Trace
             string value = s.Property1;
 
             string output = OutputString.ToString();
-            StringAssert.Contains("Entering: TestAssembly.SimpleClass/get_Property1() : string (None)", output);
-            StringAssert.Contains("Exiting: TestAssembly.SimpleClass/get_Property1() : string (None)", output);
+            StringAssert.Contains("Entering: TestAssembly.SimpleClass.get_Property1()", output);
         }
 
         [Test]
@@ -44,8 +42,7 @@ namespace PostSharp.Toolkit.Tests.Trace
             s.Property1 = "Test";
 
             string output = OutputString.ToString();
-            StringAssert.Contains("Entering: TestAssembly.SimpleClass/set_Property1(string value) : void (None)", output);
-            StringAssert.Contains("Exiting: TestAssembly.SimpleClass/set_Property1(string value) : void (None)", output);
+            StringAssert.Contains("Entering: TestAssembly.SimpleClass.set_Property1(string value = \"Test\")", output);
         }
 
         [Test]

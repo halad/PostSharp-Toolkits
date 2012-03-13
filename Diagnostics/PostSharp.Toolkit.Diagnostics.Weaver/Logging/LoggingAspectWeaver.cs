@@ -9,8 +9,9 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
     {
         private static readonly LogAspectConfigurationAttribute defaultConfiguration = new LogAspectConfigurationAttribute
         {
-            OnEntryLogParameter = LogParameters.ParameterNames | LogParameters.ParameterTypes | LogParameters.ParameterValues,
-            OnExitLogParameter = LogParameters.None
+            OnEntryLogOptions = LogOptions.IncludeParameterName | LogOptions.IncludeParameterType | LogOptions.IncludeParameterValue,
+            OnExceptionLogOptions = LogOptions.IncludeParameterName | LogOptions.IncludeParameterType | LogOptions.IncludeParameterValue,
+            OnSuccessLogOptions = LogOptions.NotLogged
         };
 
         private LoggingAspectTransformation transformation;
