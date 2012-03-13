@@ -8,7 +8,7 @@ namespace PostSharp.Toolkit.Tests
     public class LoggingToolkitTests : ConsoleTestsFixture
     {
         [Test]
-        public void LoggingToolkit_Methods_LogsMethodEnterAndExit()
+        public void LoggingToolkit_Methods_LogsMethodEnter()
         {
             SimpleClass s = new SimpleClass();
             s.Method1();

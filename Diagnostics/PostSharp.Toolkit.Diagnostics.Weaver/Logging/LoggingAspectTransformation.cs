@@ -57,6 +57,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                 private readonly ILoggingBackendInstance backendInstance;
                 private readonly LogOptions onEntryOptions;
                 private readonly LogOptions onSuccessOptions;
+                private readonly LogOptions onExceptionOptions;
 
                 public Implementation(LoggingAspectTransformationInstance transformationInstance, MethodBodyTransformationContext context)
                     : base(transformationInstance.AspectWeaver.AspectInfrastructureTask, context)
@@ -67,6 +68,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     // todo fix configuration
                     this.onEntryOptions = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogOptions>(c => c.OnEntryOptions);
                     this.onSuccessOptions = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogOptions>(c => c.OnSuccessOptions);
+                    this.onExceptionOptions = this.transformationInstance.AspectWeaverInstance.GetConfigurationValue<LogAspectConfiguration, LogOptions>(c => c.OnExceptionOptions);
                 }
 
                 public void Implement()
@@ -74,12 +76,15 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     ITypeSignature exceptionSignature = this.transformationInstance.AspectWeaver.Module.Cache.GetType(typeof(Exception));
 
                     bool hasOnEntry = (this.onEntryOptions != LogOptions.None &&
-                                       (this.onEntryOptions & LogOptions.NotLogged) != 0);
+                                       (this.onEntryOptions & LogOptions.NotLogged) == 0);
 
                     bool hasOnSuccess = (this.onSuccessOptions != LogOptions.None &&
                                          (this.onSuccessOptions & LogOptions.NotLogged) != 0);
 
-                    Implement(hasOnEntry, hasOnSuccess, false, new[] { exceptionSignature });
+                    bool hasOnException = (this.onExceptionOptions != LogOptions.None &&
+                                           (this.onExceptionOptions & LogOptions.NotLogged) == 0);
+
+                    Implement(hasOnEntry, hasOnSuccess, false, hasOnException ? new[] { exceptionSignature } : null);
                     this.Context.AddRedirection(this.Redirection);
                 }
 
@@ -100,15 +105,15 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     LocalVariableSymbol exceptionLocal = block.MethodBody.RootInstructionBlock.DefineLocalVariable(
                         exceptionType, DebuggerSpecialNames.GetVariableSpecialName("ex"));
 
-                    LogLevel logLevel = LogLevel.Warning;
+                    LogSeverity logSeverity = LogSeverity.Warning;
                     if (builder.SupportsIsEnabled)
                     {
-                        builder.EmitGetIsEnabled(writer, logLevel);
+                        builder.EmitGetIsEnabled(writer, logSeverity);
                         InstructionSequence branchSequence = block.AddInstructionSequence(null, NodePosition.After, sequence);
                         writer.EmitBranchingInstruction(OpCodeNumber.Brfalse_S, branchSequence);
                     }
 
-                    builder.EmitWrite(writer, block, "An exception occurred:\n{0}", 1, logLevel,
+                    builder.EmitWrite(writer, block, "An exception occurred:\n{0}", 1, logSeverity,
                                       w => w.EmitInstructionLocalVariable(OpCodeNumber.Stloc, exceptionLocal),
                                       (i, w) => w.EmitInstructionLocalVariable(OpCodeNumber.Ldloc, exceptionLocal));
 
@@ -157,7 +162,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     
                     if (builder.SupportsIsEnabled)
                     {
-                        builder.EmitGetIsEnabled(writer, LogLevel.Trace);
+                        builder.EmitGetIsEnabled(writer, LogSeverity.Trace);
                         InstructionSequence branchSequence = block.AddInstructionSequence(null, NodePosition.After, sequence);
                         writer.EmitBranchingInstruction(OpCodeNumber.Brfalse_S, branchSequence);
                     }
@@ -165,7 +170,7 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
                     int parameterCount = Context.MethodMapping.MethodSignature.ParameterCount;
                     bool hasThis = Context.MethodMapping.MethodSignature.CallingConvention == CallingConvention.HasThis;
 
-                    builder.EmitWrite(writer, block, messageFormatString, parameterCount, LogLevel.Trace, null,
+                    builder.EmitWrite(writer, block, messageFormatString, parameterCount, LogSeverity.Trace, null,
                                       (i, instructionWriter) =>
                                       {
                                           instructionWriter.EmitInstructionInt16(OpCodeNumber.Ldarg, (short)(hasThis ? i + 1 : i));

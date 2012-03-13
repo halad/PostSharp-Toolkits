@@ -93,12 +93,12 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging.Console
                 get { return false; }
             }
 
-            public void EmitGetIsEnabled(InstructionWriter writer, LogLevel level)
+            public void EmitGetIsEnabled(InstructionWriter writer, LogSeverity logSeverity)
             {
             }
 
             public void EmitWrite(InstructionWriter writer, InstructionBlock block, string messageFormattingString,
-                                  int argumentsCount, LogLevel logLevel, Action<InstructionWriter> getExceptionAction,
+                                  int argumentsCount, LogSeverity logSeverity, Action<InstructionWriter> getExceptionAction,
                                   Action<int, InstructionWriter> loadArgumentAction)
             {
                 IMethod method;

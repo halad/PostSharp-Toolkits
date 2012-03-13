@@ -55,7 +55,6 @@
     <Compile Include="Logging\Console\ConsoleBackend.cs" />
     <Compile Include="Logging\DiagnosticsBackendProvider.cs" />
     <Compile Include="Logging\ILoggingCategoryBuilder.cs" />
-    <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\LoggingImplementationTypeBuilder.cs" />
     <Compile Include="Logging\ILoggingBackend.cs" />
     <Compile Include="Logging\ILoggingBackendInstance.cs" />

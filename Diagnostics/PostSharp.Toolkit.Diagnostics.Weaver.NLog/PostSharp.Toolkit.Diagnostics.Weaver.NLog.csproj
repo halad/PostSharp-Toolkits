@@ -66,6 +66,10 @@
       <Project>{BD4BCA33-49D2-48AB-BC5A-E50A07C90576}</Project>
       <Name>PostSharp.Toolkit.Diagnostics.Weaver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PostSharp.Toolkit.Diagnostics\PostSharp.Toolkit.Diagnostics.csproj">
+      <Project>{19C7E7BD-4C68-4796-97ED-24E6CEFD95B0}</Project>
+      <Name>PostSharp.Toolkit.Diagnostics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

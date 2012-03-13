@@ -1,6 +1,6 @@
-namespace PostSharp.Toolkit.Diagnostics.Weaver.Logging
+namespace PostSharp.Toolkit.Diagnostics
 {
-    public enum LogLevel
+    public enum LogSeverity
     {
         Trace,
         Info,

@@ -15,7 +15,7 @@ namespace PostSharp.Toolkit.Tests.Log4Net
         }
 
         [Test]
-        public void Log4Net_Methods_LogsMethodEnterAndExit()
+        public void Log4Net_Methods_LogsMethodEnter()
         {
             SimpleClass s = new SimpleClass();
             s.Method1();

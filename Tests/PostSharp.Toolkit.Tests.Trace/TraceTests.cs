@@ -16,7 +16,7 @@ namespace PostSharp.Toolkit.Tests.Trace
         }
 
         [Test]
-        public void Trace_Methods_LogsMethodEnterAndExit()
+        public void Trace_Methods_LogsMethodEnter()
         {
             SimpleClass s = new SimpleClass();
             s.Method1();

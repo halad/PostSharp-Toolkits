@@ -4,7 +4,6 @@ using PostSharp.Sdk.AspectWeaver;
 using PostSharp.Sdk.CodeModel;
 using PostSharp.Sdk.CodeModel.TypeSignatures;
 using PostSharp.Toolkit.Diagnostics.Weaver.Logging;
-using LogLevel = PostSharp.Toolkit.Diagnostics.Weaver.Logging.LogLevel;
 
 namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
 {
@@ -94,56 +93,56 @@ namespace PostSharp.Toolkit.Diagnostics.Weaver.NLog.Logging
                 get { return true; }
             }
 
-            public void EmitGetIsEnabled(InstructionWriter writer, LogLevel level)
+            public void EmitGetIsEnabled(InstructionWriter writer, LogSeverity logSeverity)
             {
                 writer.EmitInstructionField(OpCodeNumber.Ldsfld, this.loggerField);
 
-                switch (level)
+                switch (logSeverity)
                 {
-                    case LogLevel.Trace:
+                    case LogSeverity.Trace:
                         writer.EmitInstructionMethod(OpCodeNumber.Callvirt, this.parent.getIsTraceEnabledMethod);
                         break;
-                    case LogLevel.Info:
+                    case LogSeverity.Info:
                         writer.EmitInstructionMethod(OpCodeNumber.Callvirt, this.parent.getIsInfoEnabledMethod);
                         break;
-                    case LogLevel.Warning:
+                    case LogSeverity.Warning:
                         writer.EmitInstructionMethod(OpCodeNumber.Callvirt, this.parent.getIsWarnEnabledMethod);
                         break;
-                    case LogLevel.Error:
+                    case LogSeverity.Error:
                         writer.EmitInstructionMethod(OpCodeNumber.Callvirt, this.parent.getIsErrorEnabledMethod);
                         break;
-                    case LogLevel.Fatal:
+                    case LogSeverity.Fatal:
                         writer.EmitInstructionMethod(OpCodeNumber.Callvirt, this.parent.getIsFatalEnabledMethod);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("level");
+                        throw new ArgumentOutOfRangeException("logSeverity");
                 }
             }
 
             public void EmitWrite(InstructionWriter writer, InstructionBlock block, string messageFormattingString,
-                                  int argumentsCount, LogLevel logLevel, Action<InstructionWriter> getExceptionAction,
+                                  int argumentsCount, LogSeverity logSeverity, Action<InstructionWriter> getExceptionAction,
                                   Action<int, InstructionWriter> loadArgumentAction)
             {
                 IMethod method;
-                switch (logLevel)
+                switch (logSeverity)
                 {
-                    case LogLevel.Trace:
+                    case LogSeverity.Trace:
                         method = this.parent.writeDebugMethod;
                         break;
-                    case LogLevel.Info:
+                    case LogSeverity.Info:
                         method = this.parent.writeInfoMethod;
                         break;
-                    case LogLevel.Warning:
+                    case LogSeverity.Warning:
                         method = this.parent.writeWarnMethod;
                         break;
-                    case LogLevel.Error:
+                    case LogSeverity.Error:
                         method = this.parent.writeErrorMethod;
                         break;
-                    case LogLevel.Fatal:
+                    case LogSeverity.Fatal:
                         method = this.parent.writeFatalMethod;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("logLevel");
+                        throw new ArgumentOutOfRangeException("logSeverity");
                 }
 
                 if (getExceptionAction != null)
